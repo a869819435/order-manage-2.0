@@ -17,6 +17,7 @@ import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.framework.web.service.TokenService;
+import org.springframework.util.CollectionUtils;
 
 /**
  * 数据过滤处理
@@ -102,6 +103,7 @@ public class DataScopeAspect
     {
         StringBuilder sqlString = new StringBuilder();
 
+
         for (SysRole role : user.getRoles())
         {
             String dataScope = role.getDataScope();
@@ -139,6 +141,7 @@ public class DataScopeAspect
                 }
             }
         }
+
 
         if (StringUtils.isNotBlank(sqlString.toString()))
         {

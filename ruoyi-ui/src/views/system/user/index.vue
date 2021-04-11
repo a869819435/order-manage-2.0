@@ -200,13 +200,21 @@
           v-if="columns[2].visible"
           :show-overflow-tooltip="true"
         />
-        <el-table-column
+        <!-- <el-table-column
           label="部门"
           align="center"
           key="deptName"
           prop="dept.deptName"
           v-if="columns[3].visible"
           :show-overflow-tooltip="true"
+        /> -->
+        <el-table-column
+          label="性别"
+          align="center"
+          key="sex"
+          prop="sex"
+          v-if="columns[3].visible"
+          :formatter="sexFormat"
         />
         <el-table-column
           label="手机号码"
@@ -297,7 +305,7 @@
               <el-input v-model="form.nickName" placeholder="请输入用户昵称" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <!-- <el-col :span="12">
             <el-form-item label="归属部门" prop="deptId">
               <treeselect
                 v-model="form.deptId"
@@ -305,6 +313,19 @@
                 :show-count="true"
                 placeholder="请选择归属部门"
               />
+            </el-form-item>
+          </el-col> -->
+          <el-col :span="12">
+            <el-form-item label="角色">
+              <el-select v-model="form.roleIds" multiple placeholder="请选择">
+                <el-option
+                  v-for="item in roleOptions"
+                  :key="item.roleId"
+                  :label="item.roleName"
+                  :value="item.roleId"
+                  :disabled="item.status == 1"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -378,7 +399,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <!-- <el-row>
           <el-col :span="12">
             <el-form-item label="岗位">
               <el-select v-model="form.postIds" multiple placeholder="请选择">
@@ -392,20 +413,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="角色">
-              <el-select v-model="form.roleIds" multiple placeholder="请选择">
-                <el-option
-                  v-for="item in roleOptions"
-                  :key="item.roleId"
-                  :label="item.roleName"
-                  :value="item.roleId"
-                  :disabled="item.status == 1"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        </el-row> -->
         <el-row>
           <el-col :span="24">
             <el-form-item label="备注">
@@ -823,6 +831,10 @@ export default {
     // 提交上传文件
     submitFileForm() {
       this.$refs.upload.submit();
+    },
+    // 性别字典翻译
+    sexFormat(row, column) {
+      return this.selectDictLabel(this.sexOptions, row.sex);
     },
   },
 };
