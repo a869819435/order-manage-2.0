@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.address.mapper.AddressInfoMapper">
+    
+    <resultMap type="AddressInfo" id="AddressInfoResult">
+        <result property="id"    column="id"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="dimension"    column="dimension"    />
+        <result property="classId"    column="class_id"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="isDeleted"    column="is_deleted"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateUser"    column="update_user"    />
+        <result property="updateDate"    column="update_date"    />
+    </resultMap>
+
+    <sql id="selectAddressInfoVo">
+        select id, code, name, longitude, dimension, class_id, status, remark, is_deleted, create_user, create_date, update_user, update_date from address_info
+    </sql>
+
+    <select id="selectAddressInfoList" parameterType="AddressInfo" resultMap="AddressInfoResult">
+        <include refid="selectAddressInfoVo"/>
+        <where>  
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="longitude != null "> and longitude = #{longitude}</if>
+            <if test="dimension != null "> and dimension = #{dimension}</if>
+            <if test="classId != null "> and class_id = #{classId}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="createUser != null "> and create_user like concat('%', #{createUser}, '%')</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="updateUser != null "> and update_user like concat('%', #{updateUser}, '%')</if>
+            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectAddressInfoById" parameterType="Long" resultMap="AddressInfoResult">
+        <include refid="selectAddressInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAddressInfo" parameterType="AddressInfo">
+        insert into address_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="code != null and code != ''">code,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="longitude != null">longitude,</if>
+            <if test="dimension != null">dimension,</if>
+            <if test="classId != null">class_id,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="updateUser != null">update_user,</if>
+            <if test="updateDate != null">update_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="code != null and code != ''">#{code},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="longitude != null">#{longitude},</if>
+            <if test="dimension != null">#{dimension},</if>
+            <if test="classId != null">#{classId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="updateUser != null">#{updateUser},</if>
+            <if test="updateDate != null">#{updateDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAddressInfo" parameterType="AddressInfo">
+        update address_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null and code != ''">code = #{code},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="longitude != null">longitude = #{longitude},</if>
+            <if test="dimension != null">dimension = #{dimension},</if>
+            <if test="classId != null">class_id = #{classId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="updateUser != null">update_user = #{updateUser},</if>
+            <if test="updateDate != null">update_date = #{updateDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAddressInfoById" parameterType="Long">
+        delete from address_info where id = #{id}
+    </delete>
+
+    <delete id="deleteAddressInfoByIds" parameterType="String">
+        delete from address_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

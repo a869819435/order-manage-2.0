@@ -1,6 +1,6 @@
 <template>
   <div class="app-container home">
-    <el-row :gutter="20">
+    <!-- <el-row :gutter="20">
       <el-col :sm="24" :lg="24">
         <blockquote class="text-warning" style="font-size: 14px">
           领取阿里云通用云产品1888优惠券
@@ -36,20 +36,20 @@
 
         <hr />
       </el-col>
-    </el-row>
+    </el-row> -->
     <el-row :gutter="20">
       <el-col :sm="24" :lg="12" style="padding-left: 20px">
-        <h2>若依后台管理框架</h2>
+        <h2>工单管理系统</h2>
         <p>
-          一直想做一款后台管理系统，看了很多优秀的开源项目但是发现没有合适自己的。于是利用空闲休息时间开始自己写一套后台系统。如此有了若依管理系统。，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。所有前端后台代码封装过后十分精简易上手，出错概率低。同时支持移动客户端访问。系统会陆续更新一些实用功能。
+          工单管理系统用于方便管理工单资源。系统目前可以用于所有的Web应用程序，同时支持移动客户端浏览器访问。系统会陆续更新APP，方便移动端的用户使用。
         </p>
         <p>
           <b>当前版本:</b> <span>v{{ version }}</span>
         </p>
         <p>
-          <el-tag type="danger">&yen;免费开源</el-tag>
+          <el-tag type="danger">个人开发，APP还未开发，多多谅解</el-tag>
         </p>
-        <p>
+        <!-- <p>
           <el-button
             type="primary"
             size="mini"
@@ -58,17 +58,10 @@
             @click="goTarget('https://gitee.com/y_project/RuoYi-Vue')"
             >访问码云</el-button
           >
-          <el-button
-            size="mini"
-            icon="el-icon-s-home"
-            plain
-            @click="goTarget('http://ruoyi.vip')"
-            >访问主页</el-button
-          >
-        </p>
+        </p> -->
       </el-col>
 
-      <el-col :sm="24" :lg="12" style="padding-left: 50px">
+      <!-- <el-col :sm="24" :lg="12" style="padding-left: 50px">
         <el-row>
           <el-col :span="12">
             <h2>技术选型</h2>
@@ -100,7 +93,7 @@
             </ul>
           </el-col>
         </el-row>
-      </el-col>
+      </el-col> -->
     </el-row>
     <el-divider />
     <el-row :gutter="20">
@@ -110,33 +103,37 @@
             <span>联系信息</span>
           </div>
           <div class="body">
-            <p>
+            <!-- <p>
               <i class="el-icon-s-promotion"></i> 官网：<el-link
                 href="http://www.ruoyi.vip"
                 target="_blank"
                 >http://www.ruoyi.vip</el-link
               >
-            </p>
+            </p> -->
             <p>
-              <i class="el-icon-user-solid"></i> QQ群：<s>满937441</s>
-              <s>满887144332</s> <s>满180251782</s> <s>满104180207</s>
-              <a href="https://jq.qq.com/?_wv=1027&k=VvjN2nvu" target="_blank"
-                > 186866453</a
+              <i class="el-icon-user-solid"></i> 邮箱：<a
+                href="https://mail.163.com"
+                target="_blank"
+                >person_mail_yang@163.com</a
               >
+              <!-- <s>满887144332</s> <s>满180251782</s> <s>满104180207</s>
+              <a href="https://jq.qq.com/?_wv=1027&k=VvjN2nvu" target="_blank">
+                186866453</a
+              > -->
             </p>
             <p>
               <i class="el-icon-chat-dot-round"></i> 微信：<a
                 href="javascript:;"
-                >/ *若依</a
+                >daqiansijie</a
               >
             </p>
-            <p>
+            <!-- <p>
               <i class="el-icon-money"></i> 支付宝：<a
                 href="javascript:;"
                 class="支付宝信息"
                 >/ *若依</a
               >
-            </p>
+            </p> -->
           </div>
         </el-card>
       </el-col>
@@ -146,7 +143,7 @@
             <span>更新日志</span>
           </div>
           <el-collapse accordion>
-            <el-collapse-item title="v3.4.0 - 2021-02-22">
+            <!-- <el-collapse-item title="v3.4.0 - 2021-02-22">
               <ol>
                 <li>代码生成模板支持主子表</li>
                 <li>表格右侧工具栏组件支持显隐列</li>
@@ -474,8 +471,8 @@
                 <li>系统退出删除用户缓存记录</li>
                 <li>其他细节优化</li>
               </ol>
-            </el-collapse-item>
-            <el-collapse-item title="v1.1.0 - 2019-11-11">
+            </el-collapse-item> -->
+            <!-- <el-collapse-item title="v1.1.0 - 2021-03-11">
               <ol>
                 <li>新增在线用户管理</li>
                 <li>新增按钮组功能实现（批量删除、导出、清空）</li>
@@ -489,16 +486,16 @@
                 <li>修复菜单类型为按钮时不显示权限标识</li>
                 <li>其他细节优化</li>
               </ol>
-            </el-collapse-item>
-            <el-collapse-item title="v1.0.0 - 2019-10-08">
+            </el-collapse-item> -->
+            <!-- <el-collapse-item title="v1.0.0 - 2019-10-08">
               <ol>
                 <li>若依前后端分离系统正式发布</li>
               </ol>
-            </el-collapse-item>
+            </el-collapse-item> -->
           </el-collapse>
         </el-card>
       </el-col>
-      <el-col :xs="24" :sm="24" :md="12" :lg="8">
+      <!-- <el-col :xs="24" :sm="24" :md="12" :lg="8">
         <el-card class="update-log">
           <div slot="header" class="clearfix">
             <span>捐赠支持</span>
@@ -514,7 +511,7 @@
             >
           </div>
         </el-card>
-      </el-col>
+      </el-col> -->
     </el-row>
   </div>
 </template>
@@ -525,7 +522,7 @@ export default {
   data() {
     return {
       // 版本号
-      version: "3.4.0",
+      version: "1.1.0",
     };
   },
   methods: {

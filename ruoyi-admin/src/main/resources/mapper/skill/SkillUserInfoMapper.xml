@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.skill.mapper.SkillUserInfoMapper">
+    
+    <resultMap type="SkillUserInfo" id="SkillUserInfoResult">
+        <result property="id"    column="id"    />
+        <result property="skillId"    column="skill_id"    />
+        <result property="skillName"    column="skill_name"    />
+        <result property="skillLevel"    column="skill_level"    />
+        <result property="skillerId"    column="skiller_id"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="isDeleted"    column="is_deleted"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateUser"    column="update_user"    />
+        <result property="updateDate"    column="update_date"    />
+    </resultMap>
+
+    <sql id="selectSkillUserInfoVo">
+        select id, skill_id, skill_name, skill_level, skiller_id, status, remark, is_deleted, create_user, create_date, update_user, update_date from skill_user_info
+    </sql>
+
+    <select id="selectSkillUserInfoList" parameterType="SkillUserInfo" resultMap="SkillUserInfoResult">
+        <include refid="selectSkillUserInfoVo"/>
+        <where>  
+            <if test="skillId != null "> and skill_id = #{skillId}</if>
+            <if test="skillName != null  and skillName != ''"> and skill_name like concat('%', #{skillName}, '%')</if>
+            <if test="skillLevel != null "> and skill_level = #{skillLevel}</if>
+            <if test="skillerId != null "> and skiller_id = #{skillerId}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+            <if test="createUser != null "> and create_user like concat('%', #{createUser}, '%')</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="updateUser != null "> and update_user like concat('%', #{updateUser}, '%')</if>
+            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectSkillUserInfoById" parameterType="Long" resultMap="SkillUserInfoResult">
+        <include refid="selectSkillUserInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSkillUserInfo" parameterType="SkillUserInfo">
+        insert into skill_user_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="skillId != null">skill_id,</if>
+            <if test="skillName != null and skillName != ''">skill_name,</if>
+            <if test="skillLevel != null">skill_level,</if>
+            <if test="skillerId != null">skiller_id,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="updateUser != null">update_user,</if>
+            <if test="updateDate != null">update_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="skillId != null">#{skillId},</if>
+            <if test="skillName != null and skillName != ''">#{skillName},</if>
+            <if test="skillLevel != null">#{skillLevel},</if>
+            <if test="skillerId != null">#{skillerId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="updateUser != null">#{updateUser},</if>
+            <if test="updateDate != null">#{updateDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSkillUserInfo" parameterType="SkillUserInfo">
+        update skill_user_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="skillId != null">skill_id = #{skillId},</if>
+            <if test="skillName != null and skillName != ''">skill_name = #{skillName},</if>
+            <if test="skillLevel != null">skill_level = #{skillLevel},</if>
+            <if test="skillerId != null">skiller_id = #{skillerId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="updateUser != null">update_user = #{updateUser},</if>
+            <if test="updateDate != null">update_date = #{updateDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSkillUserInfoById" parameterType="Long">
+        delete from skill_user_info where id = #{id}
+    </delete>
+
+    <delete id="deleteSkillUserInfoByIds" parameterType="String">
+        delete from skill_user_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
