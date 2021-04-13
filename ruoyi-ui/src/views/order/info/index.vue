@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="85px">
       <el-form-item label="工单编码" prop="code">
         <el-input
           v-model="queryParams.code"
@@ -28,7 +28,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="成本" prop="cost">
+      <!-- <el-form-item label="成本" prop="cost">
         <el-input
           v-model="queryParams.cost"
           placeholder="请输入成本"
@@ -36,7 +36,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="价格" prop="price">
         <el-input
           v-model="queryParams.price"
@@ -64,7 +64,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="收益详情描述" prop="profitsDetail">
+      <!-- <el-form-item label="收益详情描述" prop="profitsDetail">
         <el-input
           v-model="queryParams.profitsDetail"
           placeholder="请输入收益详情描述"
@@ -72,11 +72,11 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="预计使用时长" prop="useTime">
+      </el-form-item> -->
+      <el-form-item label="预计时长" prop="useTime">
         <el-input
           v-model="queryParams.useTime"
-          placeholder="请输入预计使用时长"
+          placeholder="请输入预计时长"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -92,7 +92,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="是否删除" prop="isDeleted">
+      <!-- <el-form-item label="是否删除" prop="isDeleted">
         <el-input
           v-model="queryParams.isDeleted"
           placeholder="请输入是否删除"
@@ -142,7 +142,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         ></el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -200,25 +200,25 @@
       <el-table-column label="主键" align="center" prop="id" />
       <el-table-column label="工单编码" align="center" prop="code" />
       <el-table-column label="工单名称" align="center" prop="name" />
-      <el-table-column label="工单分类id" align="center" prop="classId" />
+      <el-table-column label="工单分类id" align="center" prop="classId" width="100" />
       <el-table-column label="成本" align="center" prop="cost" />
       <el-table-column label="价格" align="center" prop="price" />
       <el-table-column label="雇主打赏" align="center" prop="exceptional" />
       <el-table-column label="收益" align="center" prop="profits" />
-      <el-table-column label="收益详情描述" align="center" prop="profitsDetail" />
-      <el-table-column label="预计使用时长" align="center" prop="useTime" />
+      <el-table-column label="收益描述" align="center" prop="profitsDetail" />
+      <el-table-column label="预计时长" align="center" prop="useTime" />
       <el-table-column label="需要技能" align="center" prop="needSkills" />
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="描述" align="center" prop="remark" />
-      <el-table-column label="是否删除" align="center" prop="isDeleted" />
+      <!-- <el-table-column label="是否删除" align="center" prop="isDeleted" /> -->
       <el-table-column label="创建人id" align="center" prop="createUser" />
-      <el-table-column label="创建时间" align="center" prop="createDate" width="180">
+      <el-table-column label="创建时间" align="center" prop="createDate" width="100">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="修改人id" align="center" prop="updateUser" />
-      <el-table-column label="修改时间" align="center" prop="updateDate" width="180">
+      <el-table-column label="修改时间" align="center" prop="updateDate" width="100">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateDate, '{y}-{m}-{d}') }}</span>
         </template>
@@ -252,8 +252,8 @@
     />
 
     <!-- 添加或修改工单信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="620px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="工单编码" prop="code">
           <el-input v-model="form.code" placeholder="请输入工单编码" />
         </el-form-item>
@@ -278,8 +278,8 @@
         <el-form-item label="收益详情描述" prop="profitsDetail">
           <el-input v-model="form.profitsDetail" placeholder="请输入收益详情描述" />
         </el-form-item>
-        <el-form-item label="预计使用时长" prop="useTime">
-          <el-input v-model="form.useTime" placeholder="请输入预计使用时长" />
+        <el-form-item label="预计时长" prop="useTime">
+          <el-input v-model="form.useTime" placeholder="请输入预计时长" />
         </el-form-item>
         <el-form-item label="需要技能" prop="needSkills">
           <el-input v-model="form.needSkills" type="textarea" placeholder="请输入内容" />
@@ -296,7 +296,7 @@
         <el-form-item label="描述" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入描述" />
         </el-form-item>
-        <el-form-item label="是否删除" prop="isDeleted">
+        <!-- <el-form-item label="是否删除" prop="isDeleted">
           <el-input v-model="form.isDeleted" placeholder="请输入是否删除" />
         </el-form-item>
         <el-form-item label="创建人id" prop="createUser">
@@ -320,7 +320,7 @@
             value-format="yyyy-MM-dd"
             placeholder="选择修改时间">
           </el-date-picker>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>

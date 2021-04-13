@@ -1,16 +1,16 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="关联的用户账号" prop="userId">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="100px">
+      <el-form-item label="技师ID" prop="userId" label-width="60px">
         <el-input
           v-model="queryParams.userId"
-          placeholder="请输入关联的用户账号"
+          placeholder="请输入技师id"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="技师能力值" prop="power">
+      <el-form-item label="技师能力值" prop="power" label-width="90px">
         <el-input
           v-model="queryParams.power"
           placeholder="请输入技师能力值"
@@ -28,7 +28,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="地址id" prop="addressId">
+      <el-form-item label="地址id" prop="addressId" label-width="60px">
         <el-input
           v-model="queryParams.addressId"
           placeholder="请输入地址id"
@@ -37,7 +37,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item label="状态" prop="status" label-width="50px">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
           <el-option
             v-for="dict in statusOptions"
@@ -47,7 +47,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="是否删除" prop="isDeleted">
+      <!-- <el-form-item label="是否删除" prop="isDeleted">
         <el-input
           v-model="queryParams.isDeleted"
           placeholder="请输入是否删除"
@@ -97,7 +97,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         ></el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -159,7 +159,7 @@
       <el-table-column label="地址id" align="center" prop="addressId" />
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="描述" align="center" prop="remark" />
-      <el-table-column label="是否删除" align="center" prop="isDeleted" />
+      <!-- <el-table-column label="是否删除" align="center" prop="isDeleted" /> -->
       <el-table-column label="创建人id" align="center" prop="createUser" />
       <el-table-column label="创建时间" align="center" prop="createDate" width="180">
         <template slot-scope="scope">
@@ -227,7 +227,7 @@
         <el-form-item label="描述" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入描述" />
         </el-form-item>
-        <el-form-item label="是否删除" prop="isDeleted">
+        <!-- <el-form-item label="是否删除" prop="isDeleted">
           <el-input v-model="form.isDeleted" placeholder="请输入是否删除" />
         </el-form-item>
         <el-form-item label="创建人id" prop="createUser">
@@ -251,7 +251,7 @@
             value-format="yyyy-MM-dd"
             placeholder="选择修改时间">
           </el-date-picker>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>

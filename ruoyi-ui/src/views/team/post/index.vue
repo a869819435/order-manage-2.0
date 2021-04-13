@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="80px">
       <el-form-item label="团队编号" prop="code">
         <el-input
           v-model="queryParams.code"
@@ -37,7 +37,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item label="状态" prop="status" label-width="50px">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
           <el-option
             v-for="dict in statusOptions"
@@ -47,7 +47,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="是否删除" prop="isDeleted">
+      <!-- <el-form-item label="是否删除" prop="isDeleted">
         <el-input
           v-model="queryParams.isDeleted"
           placeholder="请输入是否删除"
@@ -97,7 +97,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         ></el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -159,7 +159,7 @@
       <el-table-column label="职务薪资" align="center" prop="salary" />
       <el-table-column label="职务描述" align="center" prop="remark" />
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
-      <el-table-column label="是否删除" align="center" prop="isDeleted" />
+      <!-- <el-table-column label="是否删除" align="center" prop="isDeleted" /> -->
       <el-table-column label="创建人id" align="center" prop="createUser" />
       <el-table-column label="创建时间" align="center" prop="createDate" width="180">
         <template slot-scope="scope">
@@ -201,8 +201,8 @@
     />
 
     <!-- 添加或修改团队职务信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="620px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="团队编号" prop="code">
           <el-input v-model="form.code" placeholder="请输入团队编号" />
         </el-form-item>
@@ -227,7 +227,7 @@
             >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="是否删除" prop="isDeleted">
+        <!-- <el-form-item label="是否删除" prop="isDeleted">
           <el-input v-model="form.isDeleted" placeholder="请输入是否删除" />
         </el-form-item>
         <el-form-item label="创建人id" prop="createUser">
@@ -251,7 +251,7 @@
             value-format="yyyy-MM-dd"
             placeholder="选择修改时间">
           </el-date-picker>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>

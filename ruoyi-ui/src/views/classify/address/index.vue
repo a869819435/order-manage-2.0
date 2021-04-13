@@ -25,10 +25,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="父级id" prop="parentId">
+      <el-form-item label="父级分类" prop="parentId">
         <!-- <el-input
           v-model="queryParams.parentId"
-          placeholder="请输入父级id"
+          placeholder="请输入父级分类"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -37,7 +37,7 @@
           v-model="queryParams.parentId"
           :options="addressOptions"
           :normalizer="normalizer"
-          placeholder="请选择父级id"
+          placeholder="请选择父级分类"
           style="width: 250px"
         />
       </el-form-item>
@@ -60,7 +60,7 @@
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
-            >{{ dict.dictValue }}</el-option
+            >{{ dict.dictLabel }}</el-option
           >
         </el-select>
       </el-form-item>
@@ -156,7 +156,7 @@
     >
       <el-table-column label="地址分类编码" align="center" prop="code" />
       <el-table-column label="地址分类名称" align="center" prop="name" />
-      <el-table-column label="父级id" align="center" prop="parentId" />
+      <el-table-column label="父级分类" align="center" prop="parentId" />
       <el-table-column
         label="层级"
         align="center"
@@ -165,7 +165,7 @@
       />
       <el-table-column label="备注" align="center" prop="remark" />
       <!-- <el-table-column label="是否删除" align="center" prop="isDeleted" /> -->
-      <!-- <el-table-column label="创建人id" align="center" prop="createUser" />
+      <el-table-column label="创建人id" align="center" prop="createUser" />
       <el-table-column
         label="创建时间"
         align="center"
@@ -175,7 +175,7 @@
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createDate, "{y}-{m}-{d}") }}</span>
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column label="修改人id" align="center" prop="updateUser" />
       <el-table-column
         label="修改时间"
@@ -222,18 +222,18 @@
         <el-form-item label="地址分类名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入地址分类名称" />
         </el-form-item>
-        <el-form-item label="父级id" prop="parentId">
+        <el-form-item label="父级分类" prop="parentId">
           <treeselect
             v-model="form.parentId"
             :options="addressOptions"
             :normalizer="normalizer"
-            placeholder="请选择父级id"
+            placeholder="请选择父级分类"
           />
         </el-form-item>
         <el-form-item label="层级" prop="level">
           <!-- <el-input v-model="form.level" placeholder="请输入层级" /> -->
           <el-select
-            v-model="form.find"
+            v-model="form.level"
             placeholder="请输入层级"
             clearable
             style="width: 100%"
@@ -350,13 +350,14 @@ export default {
           { required: true, message: "地址分类名称不能为空", trigger: "blur" },
         ],
         parentId: [
-          { required: true, message: "父级id不能为空", trigger: "blur" },
+          { required: true, message: "父级分类不能为空", trigger: "blur" },
         ],
       },
     };
   },
   created() {
     this.getList();
+    this.getTreeselect();
     this.getDicts("class_level").then((response) => {
       this.levelOptions = response.data;
     });

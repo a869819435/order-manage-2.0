@@ -25,14 +25,21 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="父级id" prop="parentId">
-        <el-input
+      <el-form-item label="父级分类" prop="parentId">
+        <!-- <el-input
           v-model="queryParams.parentId"
-          placeholder="请输入父级id"
+          placeholder="请输入父级分类"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
-        />
+        /> -->
+        <treeselect
+            v-model="form.parentId"
+            :options="skiilOptions"
+            :normalizer="normalizer"
+            placeholder="请选择父级分类"
+            style="width: 250px"
+          />
       </el-form-item>
       <el-form-item label="层级" prop="level">
         <!-- <el-input
@@ -149,7 +156,7 @@
     >
       <el-table-column label="技能分类编码" align="center" prop="code" />
       <el-table-column label="技能分类名称" align="center" prop="name" />
-      <el-table-column label="父级id" align="center" prop="parentId" />
+      <el-table-column label="父级分类" align="center" prop="parentId" />
       <el-table-column
         label="层级"
         align="center"
@@ -215,18 +222,18 @@
         <el-form-item label="技能分类名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入技能分类名称" />
         </el-form-item>
-        <el-form-item label="父级id" prop="parentId">
+        <el-form-item label="父级分类" prop="parentId">
           <treeselect
             v-model="form.parentId"
             :options="skiilOptions"
             :normalizer="normalizer"
-            placeholder="请选择父级id"
+            placeholder="请选择父级分类"
           />
         </el-form-item>
         <el-form-item label="层级" prop="level">
           <!-- <el-input v-model="form.level" placeholder="请输入层级" /> -->
           <el-select
-            v-model="form.find"
+            v-model="form.level"
             placeholder="请输入层级"
             clearable
             style="width: 100%"
@@ -343,13 +350,14 @@ export default {
           { required: true, message: "技能分类名称不能为空", trigger: "blur" },
         ],
         parentId: [
-          { required: true, message: "父级id不能为空", trigger: "blur" },
+          { required: true, message: "父级分类不能为空", trigger: "blur" },
         ],
       },
     };
   },
   created() {
     this.getList();
+    this.getTreeselect();
     this.getDicts("class_level").then((response) => {
       this.levelOptions = response.data;
     });

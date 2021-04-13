@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="100px">
       <el-form-item label="团队编码" prop="code">
         <el-input
           v-model="queryParams.code"
@@ -19,19 +19,19 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="团队客服联系电话" prop="phone">
+      <el-form-item label="客服联系电话" prop="phone">
         <el-input
           v-model="queryParams.phone"
-          placeholder="请输入团队客服联系电话"
+          placeholder="请输入客服联系电话"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="团队客服联系邮箱" prop="mail">
+      <el-form-item label="客服联系邮箱" prop="mail">
         <el-input
           v-model="queryParams.mail"
-          placeholder="请输入团队客服联系邮箱"
+          placeholder="请输入客服联系邮箱"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -64,7 +64,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="团队总收益" prop="allIncome">
+      <!-- <el-form-item label="团队总收益" prop="allIncome">
         <el-input
           v-model="queryParams.allIncome"
           placeholder="请输入团队总收益"
@@ -81,7 +81,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="团队地址" prop="teamAddress">
         <el-input
           v-model="queryParams.teamAddress"
@@ -101,7 +101,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="是否删除" prop="isDeleted">
+      <!-- <el-form-item label="是否删除" prop="isDeleted">
         <el-input
           v-model="queryParams.isDeleted"
           placeholder="请输入是否删除"
@@ -151,7 +151,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         ></el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -209,17 +209,17 @@
       <el-table-column label="主键" align="center" prop="id" />
       <el-table-column label="团队编码" align="center" prop="code" />
       <el-table-column label="团队名称" align="center" prop="name" />
-      <el-table-column label="团队客服联系电话" align="center" prop="phone" />
-      <el-table-column label="团队客服联系邮箱" align="center" prop="mail" />
+      <el-table-column label="客服电话" align="center" prop="phone" />
+      <el-table-column label="客服邮箱" align="center" prop="mail" />
       <el-table-column label="团队人数" align="center" prop="number" />
-      <el-table-column label="团队平均水平" align="center" prop="avgPower" />
-      <el-table-column label="团队人均收益" align="center" prop="avgIncome" />
-      <el-table-column label="团队总收益" align="center" prop="allIncome" />
+      <el-table-column label="平均水平" align="center" prop="avgPower" />
+      <el-table-column label="人均收益" align="center" prop="avgIncome" />
+      <el-table-column label="总收益" align="center" prop="allIncome" />
       <el-table-column label="团队总评" align="center" prop="teamEvaluation" />
       <el-table-column label="团队地址" align="center" prop="teamAddress" />
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="描述" align="center" prop="remark" />
-      <el-table-column label="是否删除" align="center" prop="isDeleted" />
+      <!-- <el-table-column label="是否删除" align="center" prop="isDeleted" /> -->
       <el-table-column label="创建人id" align="center" prop="createUser" />
       <el-table-column label="创建时间" align="center" prop="createDate" width="180">
         <template slot-scope="scope">
@@ -261,18 +261,18 @@
     />
 
     <!-- 添加或修改团队信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="620px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="团队编码" prop="code">
           <el-input v-model="form.code" placeholder="请输入团队编码" />
         </el-form-item>
         <el-form-item label="团队名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入团队名称" />
         </el-form-item>
-        <el-form-item label="团队客服联系电话" prop="phone">
+        <el-form-item label="客服联系电话" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入团队客服联系电话" />
         </el-form-item>
-        <el-form-item label="团队客服联系邮箱" prop="mail">
+        <el-form-item label="客服联系邮箱" prop="mail">
           <el-input v-model="form.mail" placeholder="请输入团队客服联系邮箱" />
         </el-form-item>
         <el-form-item label="团队人数" prop="number">
@@ -305,7 +305,7 @@
         <el-form-item label="描述" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入描述" />
         </el-form-item>
-        <el-form-item label="是否删除" prop="isDeleted">
+        <!-- <el-form-item label="是否删除" prop="isDeleted">
           <el-input v-model="form.isDeleted" placeholder="请输入是否删除" />
         </el-form-item>
         <el-form-item label="创建人id" prop="createUser">
@@ -329,7 +329,7 @@
             value-format="yyyy-MM-dd"
             placeholder="选择修改时间">
           </el-date-picker>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>

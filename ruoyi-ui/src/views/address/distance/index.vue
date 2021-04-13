@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="80px">
       <el-form-item label="地址编码x" prop="codeX">
         <el-input
           v-model="queryParams.codeX"
@@ -30,10 +30,15 @@
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
+          <el-option
+            v-for="dict in statusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="是否删除" prop="isDeleted">
+      <!-- <el-form-item label="是否删除" prop="isDeleted">
         <el-input
           v-model="queryParams.isDeleted"
           placeholder="请输入是否删除"
@@ -75,7 +80,7 @@
           value-format="yyyy-MM-dd"
           placeholder="选择修改时间">
         </el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -136,13 +141,13 @@
       <el-table-column label="相差距离" align="center" prop="distance" />
       <el-table-column label="状态" align="center" prop="status" />
       <el-table-column label="描述" align="center" prop="remark" />
-      <el-table-column label="是否删除" align="center" prop="isDeleted" />
+      <!-- <el-table-column label="是否删除" align="center" prop="isDeleted" />
       <el-table-column label="创建人id" align="center" prop="createUser" />
       <el-table-column label="创建时间" align="center" prop="createDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createDate, '{y}-{m}-{d}') }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="修改人id" align="center" prop="updateUser" />
       <el-table-column label="修改时间" align="center" prop="updateDate" width="180">
         <template slot-scope="scope">
@@ -178,8 +183,8 @@
     />
 
     <!-- 添加或修改地址间距信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="620px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="地址编码x" prop="codeX">
           <el-input v-model="form.codeX" placeholder="请输入地址编码x" />
         </el-form-item>
@@ -191,13 +196,17 @@
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
-            <el-radio label="1">请选择字典生成</el-radio>
+            <el-radio
+              v-for="dict in statusOptions"
+              :key="dict.dictValue"
+              :label="parseInt(dict.dictValue)"
+            >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="描述" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入描述" />
         </el-form-item>
-        <el-form-item label="是否删除" prop="isDeleted">
+        <!-- <el-form-item label="是否删除" prop="isDeleted">
           <el-input v-model="form.isDeleted" placeholder="请输入是否删除" />
         </el-form-item>
         <el-form-item label="创建人id" prop="createUser">
@@ -221,7 +230,7 @@
             value-format="yyyy-MM-dd"
             placeholder="选择修改时间">
           </el-date-picker>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -252,6 +261,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
+      // 状态字典
+      statusOptions: [],
       // 地址间距信息表格数据
       distanceList: [],
       // 弹出层标题
@@ -290,6 +301,9 @@ export default {
   },
   created() {
     this.getList();
+    this.getDicts("general_status").then(response => {
+      this.statusOptions = response.data;
+    });
   },
   methods: {
     /** 查询地址间距信息列表 */
@@ -300,6 +314,10 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+    // 状态字典翻译
+    statusFormat(row, column) {
+      return this.selectDictLabel(this.statusOptions, row.status);
     },
     // 取消按钮
     cancel() {

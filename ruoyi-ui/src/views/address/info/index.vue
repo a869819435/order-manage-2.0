@@ -19,7 +19,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="经度" prop="longitude">
+      <!-- <el-form-item label="经度" prop="longitude">
         <el-input
           v-model="queryParams.longitude"
           placeholder="请输入经度"
@@ -36,14 +36,21 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="地址分类id" prop="classId">
-        <el-input
+      </el-form-item> -->
+      <el-form-item label="地址分类" prop="classId">
+        <!-- <el-input
           v-model="queryParams.classId"
-          placeholder="请输入地址分类id"
+          placeholder="请选择地址分类"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
+        /> -->
+        <treeselect
+          v-model="queryParams.classId"
+          :options="addressOptions"
+          :normalizer="normalizer"
+          placeholder="请选择地址分类"
+          style="width: 250px"
         />
       </el-form-item>
       <el-form-item label="状态" prop="status">
@@ -56,7 +63,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="创建人id" prop="createUser">
+      <!-- <el-form-item label="创建人id" prop="createUser">
         <el-input
           v-model="queryParams.createUser"
           placeholder="请输入创建人id"
@@ -97,7 +104,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         ></el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -201,8 +208,8 @@
     />
 
     <!-- 添加或修改地址经纬度信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="620px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="地址编码" prop="code">
           <el-input v-model="form.code" placeholder="请输入地址编码" />
         </el-form-item>
@@ -215,8 +222,14 @@
         <el-form-item label="维度" prop="dimension">
           <el-input v-model="form.dimension" placeholder="请输入维度" />
         </el-form-item>
-        <el-form-item label="地址分类id" prop="classId">
-          <el-input v-model="form.classId" placeholder="请输入地址分类id" />
+        <el-form-item label="地址分类" prop="classId">
+          <!-- <el-input v-model="form.classId" placeholder="请输入地址分类id" /> -->
+          <treeselect
+            v-model="form.classId"
+            :options="addressOptions"
+            :normalizer="normalizer"
+            placeholder="请选择地址分类"
+          />
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
@@ -230,7 +243,7 @@
         <el-form-item label="描述" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入描述" />
         </el-form-item>
-        <el-form-item label="是否删除" prop="isDeleted">
+        <!-- <el-form-item label="是否删除" prop="isDeleted">
           <el-input v-model="form.isDeleted" placeholder="请输入是否删除" />
         </el-form-item>
         <el-form-item label="创建人id" prop="createUser">
@@ -254,7 +267,7 @@
             value-format="yyyy-MM-dd"
             placeholder="选择修改时间">
           </el-date-picker>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -266,10 +279,14 @@
 
 <script>
 import { listInfo, getInfo, delInfo, addInfo, updateInfo, exportInfo } from "@/api/address/info";
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import { listAddress } from "@/api/classify/address";
 
 export default {
   name: "Info",
   components: {
+    Treeselect,
   },
   data() {
     return {
@@ -293,6 +310,8 @@ export default {
       open: false,
       // 状态字典
       statusOptions: [],
+      // 地址分类树选项
+      addressOptions: [],
       // 创建时间时间范围
       daterangeCreateDate: [],
       // 修改时间时间范围
@@ -336,6 +355,7 @@ export default {
   },
   created() {
     this.getList();
+    this.getTreeselect();
     this.getDicts("general_status").then(response => {
       this.statusOptions = response.data;
     });
@@ -357,6 +377,26 @@ export default {
         this.infoList = response.rows;
         this.total = response.total;
         this.loading = false;
+      });
+    },
+    /** 转换地址分类数据结构 */
+    normalizer(node) {
+      if (node.children && !node.children.length) {
+        delete node.children;
+      }
+      return {
+        id: node.id,
+        label: node.name,
+        children: node.children,
+      };
+    },
+     /** 查询部门下拉树结构 */
+    getTreeselect() {
+      listAddress().then((response) => {
+        this.addressOptions = [];
+        const data = { id: 0, name: "顶级节点", children: [] };
+        data.children = this.handleTree(response.data, "id", "parentId");
+        this.addressOptions.push(data);
       });
     },
     // 状态字典翻译
@@ -408,12 +448,14 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.getTreeselect();
       this.open = true;
       this.title = "添加地址经纬度信息";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      this.getTreeselect();
       const id = row.id || this.ids
       getInfo(id).then(response => {
         this.form = response.data;
