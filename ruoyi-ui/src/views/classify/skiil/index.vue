@@ -34,12 +34,12 @@
           @keyup.enter.native="handleQuery"
         /> -->
         <treeselect
-            v-model="form.parentId"
-            :options="skiilOptions"
-            :normalizer="normalizer"
-            placeholder="请选择父级分类"
-            style="width: 250px"
-          />
+          v-model="form.parentId"
+          :options="skiilOptions"
+          :normalizer="normalizer"
+          placeholder="请选择父级分类"
+          style="width: 250px"
+        />
       </el-form-item>
       <el-form-item label="层级" prop="level">
         <!-- <el-input
@@ -399,7 +399,7 @@ export default {
         children: node.children,
       };
     },
-    /** 查询部门下拉树结构 */
+    /** 查询技能分类下拉树结构 */
     getTreeselect() {
       listSkiil().then((response) => {
         this.skiilOptions = [];

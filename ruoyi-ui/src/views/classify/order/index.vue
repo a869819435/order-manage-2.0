@@ -399,7 +399,7 @@ export default {
         children: node.children,
       };
     },
-    /** 查询部门下拉树结构 */
+    /** 查询工单下拉树结构 */
     getTreeselect() {
       listOrder().then((response) => {
         this.orderOptions = [];
