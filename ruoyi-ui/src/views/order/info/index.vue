@@ -1,6 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="85px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="85px"
+    >
       <el-form-item label="工单编码" prop="code">
         <el-input
           v-model="queryParams.code"
@@ -19,13 +25,20 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="工单分类id" prop="classId">
-        <el-input
+      <el-form-item label="工单分类" prop="classId">
+        <!-- <el-input
           v-model="queryParams.classId"
-          placeholder="请输入工单分类id"
+          placeholder="请输入工单分类"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
+        /> -->
+        <treeselect
+          v-model="queryParams.classId"
+          :options="orderOptions"
+          :normalizer="normalizer"
+          placeholder="请选择工单分类"
+          style="width: 250px"
         />
       </el-form-item>
       <!-- <el-form-item label="成本" prop="cost">
@@ -83,7 +96,12 @@
         />
       </el-form-item>
       <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
+        <el-select
+          v-model="queryParams.status"
+          placeholder="请选择状态"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in statusOptions"
             :key="dict.dictValue"
@@ -144,8 +162,16 @@
         ></el-date-picker>
       </el-form-item> -->
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -158,7 +184,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['order:info:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -169,7 +196,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['order:info:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -180,7 +208,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['order:info:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -190,17 +219,30 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['order:info:export']"
-        >导出</el-button>
+          >导出</el-button
+        >
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="infoList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="infoList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="主键" align="center" prop="id" />
       <el-table-column label="工单编码" align="center" prop="code" />
       <el-table-column label="工单名称" align="center" prop="name" />
-      <el-table-column label="工单分类id" align="center" prop="classId" width="100" />
+      <el-table-column
+        label="工单分类"
+        align="center"
+        prop="classId"
+        width="100"
+      />
       <el-table-column label="成本" align="center" prop="cost" />
       <el-table-column label="价格" align="center" prop="price" />
       <el-table-column label="雇主打赏" align="center" prop="exceptional" />
@@ -208,22 +250,41 @@
       <el-table-column label="收益描述" align="center" prop="profitsDetail" />
       <el-table-column label="预计时长" align="center" prop="useTime" />
       <el-table-column label="需要技能" align="center" prop="needSkills" />
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
+      <el-table-column
+        label="状态"
+        align="center"
+        prop="status"
+        :formatter="statusFormat"
+      />
       <el-table-column label="描述" align="center" prop="remark" />
       <!-- <el-table-column label="是否删除" align="center" prop="isDeleted" /> -->
       <el-table-column label="创建人id" align="center" prop="createUser" />
-      <el-table-column label="创建时间" align="center" prop="createDate" width="100">
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createDate"
+        width="100"
+      >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createDate, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.createDate, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
       <el-table-column label="修改人id" align="center" prop="updateUser" />
-      <el-table-column label="修改时间" align="center" prop="updateDate" width="100">
+      <el-table-column
+        label="修改时间"
+        align="center"
+        prop="updateDate"
+        width="100"
+      >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateDate, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.updateDate, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -231,20 +292,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['order:info:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['order:info:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -260,8 +323,14 @@
         <el-form-item label="工单名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入工单名称" />
         </el-form-item>
-        <el-form-item label="工单分类id" prop="classId">
-          <el-input v-model="form.classId" placeholder="请输入工单分类id" />
+        <el-form-item label="工单分类" prop="classId">
+          <!-- <el-input v-model="form.classId" placeholder="请输入工单分类" /> -->
+          <treeselect
+            v-model="form.classId"
+            :options="orderOptions"
+            :normalizer="normalizer"
+            placeholder="请选择工单分类"
+          />
         </el-form-item>
         <el-form-item label="成本" prop="cost">
           <el-input v-model="form.cost" placeholder="请输入成本" />
@@ -276,13 +345,20 @@
           <el-input v-model="form.profits" placeholder="请输入收益" />
         </el-form-item>
         <el-form-item label="收益详情描述" prop="profitsDetail">
-          <el-input v-model="form.profitsDetail" placeholder="请输入收益详情描述" />
+          <el-input
+            v-model="form.profitsDetail"
+            placeholder="请输入收益详情描述"
+          />
         </el-form-item>
         <el-form-item label="预计时长" prop="useTime">
           <el-input v-model="form.useTime" placeholder="请输入预计时长" />
         </el-form-item>
         <el-form-item label="需要技能" prop="needSkills">
-          <el-input v-model="form.needSkills" type="textarea" placeholder="请输入内容" />
+          <el-input
+            v-model="form.needSkills"
+            type="textarea"
+            placeholder="请输入内容"
+          />
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
@@ -290,7 +366,8 @@
               v-for="dict in statusOptions"
               :key="dict.dictValue"
               :label="parseInt(dict.dictValue)"
-            >{{dict.dictLabel}}</el-radio>
+              >{{ dict.dictLabel }}</el-radio
+            >
           </el-radio-group>
         </el-form-item>
         <el-form-item label="描述" prop="remark">
@@ -331,11 +408,22 @@
 </template>
 
 <script>
-import { listInfo, getInfo, delInfo, addInfo, updateInfo, exportInfo } from "@/api/order/info";
+import {
+  listInfo,
+  getInfo,
+  delInfo,
+  addInfo,
+  updateInfo,
+  exportInfo,
+} from "@/api/order/info";
+import { listOrder } from "@/api/classify/order";
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   name: "Info",
   components: {
+    Treeselect,
   },
   data() {
     return {
@@ -359,6 +447,8 @@ export default {
       open: false,
       // 状态字典
       statusOptions: [],
+      // 工单分类树选项
+      orderOptions: [],
       // 创建时间时间范围
       daterangeCreateDate: [],
       // 修改时间时间范围
@@ -382,42 +472,37 @@ export default {
         createUser: null,
         createDate: null,
         updateUser: null,
-        updateDate: null
+        updateDate: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         code: [
-          { required: true, message: "工单编码不能为空", trigger: "blur" }
+          { required: true, message: "工单编码不能为空", trigger: "blur" },
         ],
         name: [
-          { required: true, message: "工单名称不能为空", trigger: "blur" }
+          { required: true, message: "工单名称不能为空", trigger: "blur" },
         ],
         classId: [
-          { required: true, message: "工单分类id不能为空", trigger: "blur" }
+          { required: true, message: "工单分类不能为空", trigger: "blur" },
         ],
-        cost: [
-          { required: true, message: "成本不能为空", trigger: "blur" }
-        ],
-        price: [
-          { required: true, message: "价格不能为空", trigger: "blur" }
-        ],
+        cost: [{ required: true, message: "成本不能为空", trigger: "blur" }],
+        price: [{ required: true, message: "价格不能为空", trigger: "blur" }],
         exceptional: [
-          { required: true, message: "雇主打赏不能为空", trigger: "blur" }
+          { required: true, message: "雇主打赏不能为空", trigger: "blur" },
         ],
-        profits: [
-          { required: true, message: "收益不能为空", trigger: "blur" }
-        ],
+        profits: [{ required: true, message: "收益不能为空", trigger: "blur" }],
         profitsDetail: [
-          { required: true, message: "收益详情描述不能为空", trigger: "blur" }
+          { required: true, message: "收益详情描述不能为空", trigger: "blur" },
         ],
-      }
+      },
     };
   },
   created() {
     this.getList();
-    this.getDicts("order_status").then(response => {
+    this.getTreeselect();
+    this.getDicts("order_status").then((response) => {
       this.statusOptions = response.data;
     });
   },
@@ -426,18 +511,42 @@ export default {
     getList() {
       this.loading = true;
       this.queryParams.params = {};
-      if (null != this.daterangeCreateDate && '' != this.daterangeCreateDate) {
-        this.queryParams.params["beginCreateDate"] = this.daterangeCreateDate[0];
+      if (null != this.daterangeCreateDate && "" != this.daterangeCreateDate) {
+        this.queryParams.params[
+          "beginCreateDate"
+        ] = this.daterangeCreateDate[0];
         this.queryParams.params["endCreateDate"] = this.daterangeCreateDate[1];
       }
-      if (null != this.daterangeUpdateDate && '' != this.daterangeUpdateDate) {
-        this.queryParams.params["beginUpdateDate"] = this.daterangeUpdateDate[0];
+      if (null != this.daterangeUpdateDate && "" != this.daterangeUpdateDate) {
+        this.queryParams.params[
+          "beginUpdateDate"
+        ] = this.daterangeUpdateDate[0];
         this.queryParams.params["endUpdateDate"] = this.daterangeUpdateDate[1];
       }
-      listInfo(this.queryParams).then(response => {
+      listInfo(this.queryParams).then((response) => {
         this.infoList = response.rows;
         this.total = response.total;
         this.loading = false;
+      });
+    },
+    /** 转换工单分类数据结构 */
+    normalizer(node) {
+      if (node.children && !node.children.length) {
+        delete node.children;
+      }
+      return {
+        id: node.id,
+        label: node.name,
+        children: node.children,
+      };
+    },
+    /** 查询工单下拉树结构 */
+    getTreeselect() {
+      listOrder().then((response) => {
+        this.orderOptions = [];
+        const data = { id: 0, name: "顶级节点", children: [] };
+        data.children = this.handleTree(response.data, "id", "parentId");
+        this.orderOptions.push(data);
       });
     },
     // 状态字典翻译
@@ -469,7 +578,7 @@ export default {
         createUser: null,
         createDate: null,
         updateUser: null,
-        updateDate: null
+        updateDate: null,
       };
       this.resetForm("form");
     },
@@ -487,9 +596,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -500,8 +609,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getInfo(id).then(response => {
+      const id = row.id || this.ids;
+      getInfo(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改工单信息";
@@ -509,16 +618,16 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateInfo(this.form).then(response => {
+            updateInfo(this.form).then((response) => {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addInfo(this.form).then(response => {
+            addInfo(this.form).then((response) => {
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -530,30 +639,38 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除工单信息编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除工单信息编号为"' + ids + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+          type: "warning",
+        }
+      )
+        .then(function () {
           return delInfo(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        })
+        });
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有工单信息数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认导出所有工单信息数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
           return exportInfo(queryParams);
-        }).then(response => {
-          this.download(response.msg);
         })
-    }
-  }
+        .then((response) => {
+          this.download(response.msg);
+        });
+    },
+  },
 };
 </script>

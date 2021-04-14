@@ -164,6 +164,17 @@
             >导出</el-button
           >
         </el-col>
+        <el-col :span="1.5">
+          <el-button
+            type="primary"
+            plain
+            icon="el-icon-plus"
+            size="mini"
+            @click="handleAddSkillerRole"
+            v-hasPermi="['system:user:addSkillerRole']"
+            >申请技师角色</el-button
+          >
+        </el-col>
         <right-toolbar
           :showSearch.sync="showSearch"
           @queryTable="getList"

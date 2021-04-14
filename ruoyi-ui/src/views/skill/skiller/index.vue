@@ -1,6 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="100px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="100px"
+    >
       <el-form-item label="技师ID" prop="userId" label-width="60px">
         <el-input
           v-model="queryParams.userId"
@@ -38,7 +44,12 @@
         />
       </el-form-item>
       <el-form-item label="状态" prop="status" label-width="50px">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
+        <el-select
+          v-model="queryParams.status"
+          placeholder="请选择状态"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in statusOptions"
             :key="dict.dictValue"
@@ -99,8 +110,16 @@
         ></el-date-picker>
       </el-form-item> -->
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -113,7 +132,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['skill:skiller:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -124,7 +144,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['skill:skiller:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -135,7 +156,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['skill:skiller:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -145,34 +167,61 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['skill:skiller:export']"
-        >导出</el-button>
+          >导出</el-button
+        >
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="skillerList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="skillerList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="主键" align="center" prop="id" />
-      <el-table-column label="关联的用户账号" align="center" prop="userId" />
+      <el-table-column label="技师ID" align="center" prop="userId" />
       <el-table-column label="技师能力值" align="center" prop="power" />
       <el-table-column label="技师评价星级" align="center" prop="evaluation" />
       <el-table-column label="地址id" align="center" prop="addressId" />
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
+      <el-table-column
+        label="状态"
+        align="center"
+        prop="status"
+        :formatter="statusFormat"
+      />
       <el-table-column label="描述" align="center" prop="remark" />
       <!-- <el-table-column label="是否删除" align="center" prop="isDeleted" /> -->
       <el-table-column label="创建人id" align="center" prop="createUser" />
-      <el-table-column label="创建时间" align="center" prop="createDate" width="180">
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createDate"
+        width="180"
+      >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createDate, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.createDate, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
       <el-table-column label="修改人id" align="center" prop="updateUser" />
-      <el-table-column label="修改时间" align="center" prop="updateDate" width="180">
+      <el-table-column
+        label="修改时间"
+        align="center"
+        prop="updateDate"
+        width="180"
+      >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateDate, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.updateDate, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -180,20 +229,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['skill:skiller:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['skill:skiller:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -201,16 +252,19 @@
     />
 
     <!-- 添加或修改技师对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="关联的用户账号" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入关联的用户账号" />
+    <el-dialog :title="title" :visible.sync="open" width="620px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+        <el-form-item label="技师ID" prop="userId">
+          <el-input v-model="form.userId" placeholder="请输入技师ID" />
         </el-form-item>
         <el-form-item label="技师能力值" prop="power">
           <el-input v-model="form.power" placeholder="请输入技师能力值" />
         </el-form-item>
         <el-form-item label="技师评价星级" prop="evaluation">
-          <el-input v-model="form.evaluation" placeholder="请输入技师评价星级" />
+          <el-input
+            v-model="form.evaluation"
+            placeholder="请输入技师评价星级"
+          />
         </el-form-item>
         <el-form-item label="地址id" prop="addressId">
           <el-input v-model="form.addressId" placeholder="请输入地址id" />
@@ -221,7 +275,8 @@
               v-for="dict in statusOptions"
               :key="dict.dictValue"
               :label="parseInt(dict.dictValue)"
-            >{{dict.dictLabel}}</el-radio>
+              >{{ dict.dictLabel }}</el-radio
+            >
           </el-radio-group>
         </el-form-item>
         <el-form-item label="描述" prop="remark">
@@ -262,12 +317,18 @@
 </template>
 
 <script>
-import { listSkiller, getSkiller, delSkiller, addSkiller, updateSkiller, exportSkiller } from "@/api/skill/skiller";
+import {
+  listSkiller,
+  getSkiller,
+  delSkiller,
+  addSkiller,
+  updateSkiller,
+  exportSkiller,
+} from "@/api/skill/skiller";
 
 export default {
   name: "Skiller",
-  components: {
-  },
+  components: {},
   data() {
     return {
       // 遮罩层
@@ -307,30 +368,30 @@ export default {
         createUser: null,
         createDate: null,
         updateUser: null,
-        updateDate: null
+        updateDate: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         userId: [
-          { required: true, message: "关联的用户账号不能为空", trigger: "blur" }
+          { required: true, message: "技师ID不能为空", trigger: "blur" },
         ],
         power: [
-          { required: true, message: "技师能力值不能为空", trigger: "blur" }
+          { required: true, message: "技师能力值不能为空", trigger: "blur" },
         ],
         evaluation: [
-          { required: true, message: "技师评价星级不能为空", trigger: "blur" }
+          { required: true, message: "技师评价星级不能为空", trigger: "blur" },
         ],
         addressId: [
-          { required: true, message: "地址id不能为空", trigger: "blur" }
+          { required: true, message: "地址id不能为空", trigger: "blur" },
         ],
-      }
+      },
     };
   },
   created() {
     this.getList();
-    this.getDicts("general_status").then(response => {
+    this.getDicts("general_status").then((response) => {
       this.statusOptions = response.data;
     });
   },
@@ -339,15 +400,19 @@ export default {
     getList() {
       this.loading = true;
       this.queryParams.params = {};
-      if (null != this.daterangeCreateDate && '' != this.daterangeCreateDate) {
-        this.queryParams.params["beginCreateDate"] = this.daterangeCreateDate[0];
+      if (null != this.daterangeCreateDate && "" != this.daterangeCreateDate) {
+        this.queryParams.params[
+          "beginCreateDate"
+        ] = this.daterangeCreateDate[0];
         this.queryParams.params["endCreateDate"] = this.daterangeCreateDate[1];
       }
-      if (null != this.daterangeUpdateDate && '' != this.daterangeUpdateDate) {
-        this.queryParams.params["beginUpdateDate"] = this.daterangeUpdateDate[0];
+      if (null != this.daterangeUpdateDate && "" != this.daterangeUpdateDate) {
+        this.queryParams.params[
+          "beginUpdateDate"
+        ] = this.daterangeUpdateDate[0];
         this.queryParams.params["endUpdateDate"] = this.daterangeUpdateDate[1];
       }
-      listSkiller(this.queryParams).then(response => {
+      listSkiller(this.queryParams).then((response) => {
         this.skillerList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -376,7 +441,7 @@ export default {
         createUser: null,
         createDate: null,
         updateUser: null,
-        updateDate: null
+        updateDate: null,
       };
       this.resetForm("form");
     },
@@ -394,9 +459,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -407,8 +472,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getSkiller(id).then(response => {
+      const id = row.id || this.ids;
+      getSkiller(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改技师";
@@ -416,16 +481,16 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateSkiller(this.form).then(response => {
+            updateSkiller(this.form).then((response) => {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addSkiller(this.form).then(response => {
+            addSkiller(this.form).then((response) => {
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -438,29 +503,33 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm('是否确认删除技师编号为"' + ids + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
           return delSkiller(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        })
+        });
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有技师数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认导出所有技师数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
           return exportSkiller(queryParams);
-        }).then(response => {
-          this.download(response.msg);
         })
-    }
-  }
+        .then((response) => {
+          this.download(response.msg);
+        });
+    },
+  },
 };
 </script>
