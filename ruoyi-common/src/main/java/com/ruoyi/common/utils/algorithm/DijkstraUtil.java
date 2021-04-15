@@ -1,31 +1,71 @@
 package com.ruoyi.common.utils.algorithm;
 
-import org.apache.commons.lang3.time.DateFormatUtils;
+import com.ruoyi.common.utils.algorithm.domain.ArrayPicture;
+import com.ruoyi.common.utils.algorithm.domain.DijkstraResult;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class DijkstraUtil {
 
-    /** 存储图 */
-    private List<List<BigDecimal>> picture = new ArrayList<>();
-
-    /** 第几次遍历的顶点记录 */
-    class Path{
-        int before;
-        int times;
-        Path(int before,int times){
-            this.before = before;
-            this.times = times;
+    static class Node{
+        int vertex;
+        BigDecimal cost;
+        public Node(int view, BigDecimal cost) {
+            this.vertex = view;
+            this.cost = cost;
         }
     }
 
-    public static void productPicture(List<String> msg)
-    {
-
+    /**
+     * 获取数组存储的图运行结果
+     * 参数要求：T所指类型前三个属性必须为 顶点1，顶点2，花费c[顶点1到顶点2花费c]
+     *
+     * @param msg
+     * @param tClass
+     * @param oldStart
+     * @param isUndirectedResult
+     * @param <T>
+     * @return
+     * @throws IllegalAccessException
+     */
+    public static <T> DijkstraResult getResultByArray(List<T> msg, Class<T> tClass,String oldStart,Boolean isUndirectedResult) throws IllegalAccessException {
+        ArrayPicture arrayPicture = new ArrayPicture();
+        arrayPicture.setPictureArray(msg,tClass,isUndirectedResult);
+        Integer start = arrayPicture.getMap().get(oldStart);
+        if (start == null){
+            return null;
+        }
+        BigDecimal[][] picture = arrayPicture.getPictureArray();
+        int total = arrayPicture.getTotal();
+        int[] visited = new int[total];
+        String[] path = new String[total];
+        // 花费量
+        BigDecimal[] dist = new BigDecimal[total];
+        PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparing(o -> o.cost));
+        queue.add(new Node(start, BigDecimal.ZERO));
+        while (!queue.isEmpty()){
+            Node temp = queue.poll();
+            if (visited[temp.vertex] >= 1){
+                continue;
+            }
+            visited[temp.vertex]++;
+            for (int i = 0; i < picture[temp.vertex].length ; i++) {
+                if (visited[i] >= 1){
+                    continue;
+                }
+                if (dist[i].compareTo(dist[temp.vertex].add(picture[temp.vertex][i])) < 0){
+                    dist[i] = dist[temp.vertex].add(picture[temp.vertex][i]);
+                    queue.add(new Node(i,dist[i]));
+                    path[i] = arrayPicture.getOldName().get(temp.vertex);
+                }
+            }
+        }
+        DijkstraResult result = new DijkstraResult();
+        result.setDist(dist);
+        result.setPath(path);
+        result.setPicture(arrayPicture);
+        return result;
     }
-
-
 
 }
