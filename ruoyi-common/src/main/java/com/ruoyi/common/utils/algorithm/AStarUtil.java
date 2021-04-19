@@ -1,15 +1,12 @@
 package com.ruoyi.common.utils.algorithm;
 
-import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.algorithm.domain.AStarResult;
 import com.ruoyi.common.utils.algorithm.domain.ArrayPicture;
 import com.ruoyi.common.utils.algorithm.domain.DijkstraResult;
 import javafx.util.Pair;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class AStarUtil {
 
@@ -36,12 +33,12 @@ public class AStarUtil {
      * @param start
      * @param end
      * @param isUndirectedResult
-     * @param times 求前times的结果
+     * @param needTimes 求前needTimes的结果
      * @param <T>
      * @return
      * @throws IllegalAccessException
      */
-    public static <T> DijkstraResult getResultByArray(List<T> msg, Class<T> tClass, String start,String end,Boolean isUndirectedResult,Integer times) throws IllegalAccessException {
+    public static <T> DijkstraResult getResultByArray(List<T> msg, Class<T> tClass, String start,String end,Boolean isUndirectedResult,Integer needTimes) throws IllegalAccessException {
         DijkstraResult dijkstraResult = DijkstraUtil.getResultByArray(msg,tClass,end,isUndirectedResult);
         ArrayPicture arrayPicture = null;
         if (dijkstraResult.getPicture() instanceof ArrayPicture){
@@ -49,55 +46,84 @@ public class AStarUtil {
         }else {
             return null;
         }
+        // 起点编号
+        Integer s = arrayPicture.getMap().get(start);
+        if (s == null){
+            return null;
+        }
+        // 终点编号,若-1表示无指定终点
+        Integer e = arrayPicture.getMap().get(end);
+        if (e == null){
+            return null;
+        }
+        // 花费量
+        BigDecimal[] dist = dijkstraResult.getDist();
+        if (dist[e].equals(Double.MAX_VALUE)){
+            return null;
+        }
         int total = arrayPicture.getTotal();
         // 图
         BigDecimal[][] picture = arrayPicture.getPictureArray();
-        // 花费量
-        BigDecimal[] dist = dijkstraResult.getDist();
         // 路径
         Pair<Integer,Integer>[][] path = new Pair[total][total];
         // 访问次数标记
         int[] visited = new int[total];
-        // 起点编号
-        int s = arrayPicture.getMap().get(start);
-        // 终点编号,若-1表示无指定终点
-        int e = -1;
-        if (!StringUtils.isEmpty(end)){
-            e = arrayPicture.getMap().get(end);
-        }
+        Arrays.fill(visited,0);
+        // A*结果
+        AStarResult aStarResult = new AStarResult(new ArrayList<>(needTimes),new ArrayList<>(needTimes),0,arrayPicture);
+        // 临时结果存储器
+        int[] ansPathTemp = new int[total + 1];
+        // 优先队列
         PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparing(o -> o.cost));
-        queue.add(new Node(new Pair<>(0,0),s,BigDecimal.ZERO));
+        queue.add(new Node(new Pair<>(0,0),s,BigDecimal.ZERO,BigDecimal.ZERO));
         while (!queue.isEmpty()){
             Node temp = queue.poll();
             visited[temp.vertex]++;
             Pair<Integer,Integer> temporary = path[temp.vertex][visited[temp.vertex]];
             path[temp.vertex][visited[temp.vertex]] = temp.prePath;
             // 判断环路
-
+            if (isLoop(total,path[temp.vertex][visited[temp.vertex]],path,ansPathTemp)){
+                path[temp.vertex][visited[temp.vertex]] = temporary;
+                visited[temp.vertex]--;
+                continue;
+            }
             // 如果都达到了需求的次数就不再走了
-            if (isDemanded(e, temp.vertex, visited, times)){
-                queue.clear();
-                break;
+            if (e.equals(temp.vertex)){
+                aStarResult.setSize(aStarResult.getSize() + 1);
+                aStarResult.getPaths().add(new ArrayList<>());
+                for (int i = ansPathTemp.length -1 ; i >= 0 ; i--) {
+
+                }
+
+                if (aStarResult.getSize().equals(needTimes)){
+                    queue.clear();
+                    break;
+                }
             }
             for (int i = 0; i < picture[temp.vertex].length ; i++) {
                 queue.add(new Node(path[temp.vertex][visited[temp.vertex]],i,
-                        temp.cost.add(picture[temp.vertex][i])));
+                        temp.cost.add(picture[temp.vertex][i]),dist[i]));
             }
         }
         DijkstraResult result = new DijkstraResult();
         return result;
     }
 
-    private static Boolean isLoop(){
-
-    }
-
-    private static Boolean isDemanded(Integer e,int now, int[] visited,int times){
-        if (e != null){
-            return e.equals(now) && visited[e] >= times;
-        }else {
-            int sum = Arrays.stream(visited).sum();
-            return sum >= times;
+    private static Boolean isLoop(int total,Pair<Integer,Integer> end,Pair<Integer,Integer>[][] path,int[] ansPathTemp){
+        int index = 0;
+        // 访问标记
+        int[] vis = new int[total];
+        Arrays.fill(vis,0);
+        // 上一个结点
+        Pair<Integer,Integer> pre = path[end.getKey()][end.getValue()];
+        for (;pre.getKey() != 0 ;pre = path[pre.getKey()][pre.getValue()] ){
+            vis[pre.getKey()]++;
+            ansPathTemp[index++] = pre.getKey();
+            if (vis[pre.getKey()] > 1){
+                return false;
+            }
         }
+        return true;
     }
+
 }

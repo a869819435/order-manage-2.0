@@ -72,12 +72,12 @@ public class ArrayPicture {
             Integer x = map.get(from);
             if (!map.containsKey(x)){
                 oldName.add(from);
-                map.put(from,total++);
+                map.put(from,++total);
             }
             Integer y = map.get(to);
             if (!map.containsKey(y)){
                 oldName.add(to);
-                map.put(to,total++);
+                map.put(to,++total);
             }
             list.add(new Edge(x, y, cost));
         }

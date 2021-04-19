@@ -39,9 +39,11 @@ public class DijkstraUtil {
         BigDecimal[][] picture = arrayPicture.getPictureArray();
         int total = arrayPicture.getTotal();
         int[] visited = new int[total];
+        Arrays.fill(visited,0);
         String[] path = new String[total];
         // 花费量
         BigDecimal[] dist = new BigDecimal[total];
+        Arrays.fill(dist,new BigDecimal(Double.MAX_VALUE));
         PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparing(o -> o.cost));
         queue.add(new Node(start, BigDecimal.ZERO));
         while (!queue.isEmpty()){
