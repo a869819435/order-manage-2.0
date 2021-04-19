@@ -90,11 +90,11 @@ public class AStarUtil {
             // 如果都达到了需求的次数就不再走了
             if (e.equals(temp.vertex)){
                 aStarResult.setSize(aStarResult.getSize() + 1);
-                aStarResult.getPaths().add(new ArrayList<>());
-                for (int i = ansPathTemp.length -1 ; i >= 0 ; i--) {
+                List<String> ansPath = new ArrayList<>(ansPathTemp.length + 1);
+                BigDecimal ansCost = BigDecimal.ZERO;
+                for (int i = ansPathTemp.length - 1 ; i >= 0 ; i--) {
 
                 }
-
                 if (aStarResult.getSize().equals(needTimes)){
                     queue.clear();
                     break;
