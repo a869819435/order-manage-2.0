@@ -71,8 +71,6 @@ public class AStarUtil {
         Arrays.fill(visited,0);
         // A*结果
         AStarResult aStarResult = new AStarResult(new ArrayList<>(needTimes),new ArrayList<>(needTimes),0,arrayPicture);
-        // 临时结果存储器
-        int[] ansPathTemp = new int[total + 1];
         // 优先队列
         PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparing(o -> o.cost));
         queue.add(new Node(new Pair<>(0,0),s,BigDecimal.ZERO,BigDecimal.ZERO));
@@ -82,19 +80,31 @@ public class AStarUtil {
             Pair<Integer,Integer> temporary = path[temp.vertex][visited[temp.vertex]];
             path[temp.vertex][visited[temp.vertex]] = temp.prePath;
             // 判断环路
-            if (isLoop(total,path[temp.vertex][visited[temp.vertex]],path,ansPathTemp)){
+            if (isLoop(total,path[temp.vertex][visited[temp.vertex]],path)){
                 path[temp.vertex][visited[temp.vertex]] = temporary;
                 visited[temp.vertex]--;
                 continue;
             }
-            // 如果都达到了需求的次数就不再走了
+            // 达到终点
             if (e.equals(temp.vertex)){
-                aStarResult.setSize(aStarResult.getSize() + 1);
-                List<String> ansPath = new ArrayList<>(ansPathTemp.length + 1);
-                BigDecimal ansCost = BigDecimal.ZERO;
-                for (int i = ansPathTemp.length - 1 ; i >= 0 ; i--) {
-
+                // 临时结果存储器
+                int[] ansPathTemp = new int[total + 1];
+                int index = 0;
+                ansPathTemp[index] = e;
+                for (Pair<Integer,Integer> pre = temp.prePath ;pre.getKey() != 0 ;pre = path[pre.getKey()][pre.getValue()] ){
+                    ansPathTemp[++index] = pre.getKey();
                 }
+                List<String> ansPath = new ArrayList<>(index);
+                BigDecimal ansCost = BigDecimal.ZERO;
+                for (int i = index - 1 ; i > 0 ; i--) {
+                    ansCost = ansCost.add(picture[ansPathTemp[i]][ansPathTemp[i-1]]);
+                    ansPath.add(arrayPicture.getOldName().get(ansPathTemp[i]));
+                }
+                ansPath.add(end);
+                aStarResult.setSize(aStarResult.getSize() + 1);
+                aStarResult.getPaths().add(ansPath);
+                aStarResult.getDist().add(ansCost);
+                // 如果都达到了需求的次数就不再走了
                 if (aStarResult.getSize().equals(needTimes)){
                     queue.clear();
                     break;
@@ -109,16 +119,13 @@ public class AStarUtil {
         return result;
     }
 
-    private static Boolean isLoop(int total,Pair<Integer,Integer> end,Pair<Integer,Integer>[][] path,int[] ansPathTemp){
-        int index = 0;
+    private static Boolean isLoop(int total,Pair<Integer,Integer> now,Pair<Integer,Integer>[][] path){
         // 访问标记
         int[] vis = new int[total];
         Arrays.fill(vis,0);
         // 上一个结点
-        Pair<Integer,Integer> pre = path[end.getKey()][end.getValue()];
-        for (;pre.getKey() != 0 ;pre = path[pre.getKey()][pre.getValue()] ){
+        for (Pair<Integer,Integer> pre = path[now.getKey()][now.getValue()] ;pre.getKey() != 0 ;pre = path[pre.getKey()][pre.getValue()] ){
             vis[pre.getKey()]++;
-            ansPathTemp[index++] = pre.getKey();
             if (vis[pre.getKey()] > 1){
                 return false;
             }
