@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ywq.address.mapper.AddressDistanceInfoMapper">
+    
+    <resultMap type="AddressDistanceInfo" id="AddressDistanceInfoResult">
+        <result property="id"    column="id"    />
+        <result property="codeX"    column="code_x"    />
+        <result property="codeY"    column="code_y"    />
+        <result property="distance"    column="distance"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="isDeleted"    column="is_deleted"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateUser"    column="update_user"    />
+        <result property="updateDate"    column="update_date"    />
+    </resultMap>
+
+    <sql id="selectAddressDistanceInfoVo">
+        select id, code_x, code_y, distance, status, remark, is_deleted, create_user, create_date, update_user, update_date from address_distance_info
+    </sql>
+
+    <select id="selectAddressDistanceInfoList" parameterType="AddressDistanceInfo" resultMap="AddressDistanceInfoResult">
+        SELECT
+            a.id,
+            a.code_x,
+            CONCAT('(',a.code_x,')',b.`name`) codeXName,
+            a.code_y,
+            CONCAT('(',a.code_y,')',c.`name`) codeYName,
+            a.distance,
+            a.STATUS,
+            a.remark,
+            a.is_deleted,
+            a.update_user,
+            a.update_date,
+            CONCAT('(',a.update_user,')',d.user_name) updateUserName,
+            a.update_date
+        FROM
+            address_distance_info a
+            LEFT JOIN address_info b ON a.code_x = b.id
+            LEFT JOIN address_info c ON a.code_y = c.id
+            LEFT JOIN sys_user d ON a.update_user = d.user_id
+        <where>
+            <if test="codeXName != null and codeXName != ''">
+                and (a.code_x LIKE  CONCAT('%',#{codeXName},'%') OR b.`name` LIKE  CONCAT('%',#{codeXName},'%'))
+            </if>
+            <if test="codeYName != null and codeYName != ''">
+                and (a.code_y LIKE  CONCAT('%',#{codeYName},'%') OR c.`name` LIKE  CONCAT('%',#{codeYName},'%'))
+            </if>
+            <if test="distance != null "> and a.distance = #{distance}</if>
+            <if test="status != null "> and a.status = #{status}</if>
+            <if test="isDeleted != null "> and a.is_deleted = #{isDeleted}</if>
+            <if test="createUser != null "> and a.create_user = #{createUser}</if>
+            <if test="createDate != null "> and a.create_date = #{createDate}</if>
+            <if test="updateUser != null "> and a.update_user = #{updateUser}</if>
+            <if test="updateDate != null "> and a.update_date = #{updateDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectAddressDistanceInfoById" parameterType="Long" resultMap="AddressDistanceInfoResult">
+        <include refid="selectAddressDistanceInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAddressDistanceInfo" parameterType="AddressDistanceInfo">
+        insert into address_distance_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="codeX != null">code_x,</if>
+            <if test="codeY != null">code_y,</if>
+            <if test="distance != null">distance,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="updateUser != null">update_user,</if>
+            <if test="updateDate != null">update_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="codeX != null">#{codeX},</if>
+            <if test="codeY != null">#{codeY},</if>
+            <if test="distance != null">#{distance},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="updateUser != null">#{updateUser},</if>
+            <if test="updateDate != null">#{updateDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAddressDistanceInfo" parameterType="AddressDistanceInfo">
+        update address_distance_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="codeX != null">code_x = #{codeX},</if>
+            <if test="codeY != null">code_y = #{codeY},</if>
+            <if test="distance != null">distance = #{distance},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="updateUser != null">update_user = #{updateUser},</if>
+            <if test="updateDate != null">update_date = #{updateDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAddressDistanceInfoById" parameterType="Long">
+        delete from address_distance_info where id = #{id}
+    </delete>
+
+    <delete id="deleteAddressDistanceInfoByIds" parameterType="String">
+        delete from address_distance_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

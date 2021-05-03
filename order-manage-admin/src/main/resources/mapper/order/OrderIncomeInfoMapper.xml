@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ywq.order.mapper.OrderIncomeInfoMapper">
+    
+    <resultMap type="OrderIncomeInfo" id="OrderIncomeInfoResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="skillId"    column="skill_id"    />
+        <result property="context"    column="context"    />
+        <result property="rating"    column="rating"    />
+        <result property="status"    column="status"    />
+        <result property="isDeleted"    column="is_deleted"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateUser"    column="update_user"    />
+        <result property="updateDate"    column="update_date"    />
+    </resultMap>
+
+    <sql id="selectOrderIncomeInfoVo">
+        select id, order_id, skill_id, context, rating, status, is_deleted, create_user, create_date, update_user, update_date from order_income_info
+    </sql>
+
+    <select id="selectOrderIncomeInfoList" parameterType="OrderIncomeInfo" resultMap="OrderIncomeInfoResult">
+        <include refid="selectOrderIncomeInfoVo"/>
+        <where>  
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="skillId != null "> and skill_id = #{skillId}</if>
+            <if test="context != null  and context != ''"> and context = #{context}</if>
+            <if test="rating != null "> and rating = #{rating}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+            <if test="createUser != null "> and create_user like concat('%', #{createUser}, '%')</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="updateUser != null "> and update_user like concat('%', #{updateUser}, '%')</if>
+            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectOrderIncomeInfoById" parameterType="Long" resultMap="OrderIncomeInfoResult">
+        <include refid="selectOrderIncomeInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOrderIncomeInfo" parameterType="OrderIncomeInfo">
+        insert into order_income_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="skillId != null">skill_id,</if>
+            <if test="context != null and context != ''">context,</if>
+            <if test="rating != null">rating,</if>
+            <if test="status != null">status,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="updateUser != null">update_user,</if>
+            <if test="updateDate != null">update_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="skillId != null">#{skillId},</if>
+            <if test="context != null and context != ''">#{context},</if>
+            <if test="rating != null">#{rating},</if>
+            <if test="status != null">#{status},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="updateUser != null">#{updateUser},</if>
+            <if test="updateDate != null">#{updateDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOrderIncomeInfo" parameterType="OrderIncomeInfo">
+        update order_income_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="skillId != null">skill_id = #{skillId},</if>
+            <if test="context != null and context != ''">context = #{context},</if>
+            <if test="rating != null">rating = #{rating},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="updateUser != null">update_user = #{updateUser},</if>
+            <if test="updateDate != null">update_date = #{updateDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOrderIncomeInfoById" parameterType="Long">
+        delete from order_income_info where id = #{id}
+    </delete>
+
+    <delete id="deleteOrderIncomeInfoByIds" parameterType="String">
+        delete from order_income_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
