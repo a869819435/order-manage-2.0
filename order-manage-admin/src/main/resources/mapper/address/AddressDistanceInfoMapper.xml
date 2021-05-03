@@ -43,11 +43,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             LEFT JOIN address_info c ON a.code_y = c.id
             LEFT JOIN sys_user d ON a.update_user = d.user_id
         <where>
-            <if test="codeXName != null and codeXName != ''">
-                and (a.code_x LIKE  CONCAT('%',#{codeXName},'%') OR b.`name` LIKE  CONCAT('%',#{codeXName},'%'))
+            a.is_deleted = 0
+            <if test="codeX != null">
+                and a.code_x = #{codeX}
             </if>
-            <if test="codeYName != null and codeYName != ''">
-                and (a.code_y LIKE  CONCAT('%',#{codeYName},'%') OR c.`name` LIKE  CONCAT('%',#{codeYName},'%'))
+            <if test="codeY != null">
+                and a.code_y = #{codeY}
             </if>
             <if test="distance != null "> and a.distance = #{distance}</if>
             <if test="status != null "> and a.status = #{status}</if>
@@ -63,7 +64,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectAddressDistanceInfoVo"/>
         where id = #{id}
     </select>
-        
+
+    <select id="selectAddressDistanceInfoCount" resultType="java.lang.Integer">
+        SELECT
+            COUNT(id)
+        FROM
+            address_distance_info
+        <where>
+            is_deleted = 0
+            <if test="codeXName != null">
+                AND FIND_IN_SET(code_x,#{codeXName})
+            </if>
+            <if test="codeYName != null">
+                OR FIND_IN_SET(code_y,#{codeYName})
+            </if>
+        </where>
+        LIMIT 0,1
+    </select>
+
     <insert id="insertAddressDistanceInfo" parameterType="AddressDistanceInfo">
         insert into address_distance_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -112,11 +130,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteAddressDistanceInfoById" parameterType="Long">
-        delete from address_distance_info where id = #{id}
+        UPDATE address_distance_info SET is_deleted = 1 WHERE id = #{id}
     </delete>
 
     <delete id="deleteAddressDistanceInfoByIds" parameterType="String">
-        delete from address_distance_info where id in 
+        UPDATE address_distance_info SET is_deleted = 1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

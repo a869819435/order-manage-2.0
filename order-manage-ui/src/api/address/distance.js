@@ -28,6 +28,7 @@ export function addDistance(data) {
 
 // 修改地址间距信息
 export function updateDistance(data) {
+  console.log(data);
   return request({
     url: '/address/distance',
     method: 'put',

@@ -1,11 +1,12 @@
 package com.ywq.address.service.impl;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ywq.address.mapper.AddressDistanceInfoMapper;
 import com.ywq.address.domain.AddressDistanceInfo;
 import com.ywq.address.service.IAddressDistanceInfoService;
+
+import javax.annotation.Resource;
 
 /**
  * 地址间距信息Service业务层处理
@@ -16,7 +17,7 @@ import com.ywq.address.service.IAddressDistanceInfoService;
 @Service
 public class AddressDistanceInfoServiceImpl implements IAddressDistanceInfoService 
 {
-    @Autowired
+    @Resource
     private AddressDistanceInfoMapper addressDistanceInfoMapper;
 
     /**
@@ -41,6 +42,17 @@ public class AddressDistanceInfoServiceImpl implements IAddressDistanceInfoServi
     public List<AddressDistanceInfo> selectAddressDistanceInfoList(AddressDistanceInfo addressDistanceInfo)
     {
         return addressDistanceInfoMapper.selectAddressDistanceInfoList(addressDistanceInfo);
+    }
+
+    /**
+     * 查询地址间距信息数量
+     *
+     * @param addressDistanceInfo 地址间距信息
+     * @return 地址间距信息集合
+     */
+    @Override
+    public int selectAddressDistanceInfoCount(AddressDistanceInfo addressDistanceInfo){
+        return addressDistanceInfoMapper.selectAddressDistanceInfoCount(addressDistanceInfo);
     }
 
     /**

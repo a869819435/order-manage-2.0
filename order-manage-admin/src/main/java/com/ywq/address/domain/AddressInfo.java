@@ -49,8 +49,11 @@ public class AddressInfo extends BaseEntity
     private Integer isDeleted;
 
     /** 创建人id */
-    @Excel(name = "创建人id")
     private Long createUser;
+
+    /** 创建人 */
+    @Excel(name = "创建人")
+    private String createUserName;
 
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -58,8 +61,11 @@ public class AddressInfo extends BaseEntity
     private Date createDate;
 
     /** 修改人id */
-    @Excel(name = "修改人id")
     private Long updateUser;
+
+    /** 修改人 */
+    @Excel(name = "修改人")
+    private String updateUserName;
 
     /** 修改时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -152,7 +158,15 @@ public class AddressInfo extends BaseEntity
         this.createDate = createDate;
     }
 
-    public Date getCreateDate() 
+    public String getCreateUserName() {
+        return createUserName;
+    }
+
+    public void setCreateUserName(String createUserName) {
+        this.createUserName = createUserName;
+    }
+
+    public Date getCreateDate()
     {
         return createDate;
     }
@@ -170,7 +184,15 @@ public class AddressInfo extends BaseEntity
         this.updateDate = updateDate;
     }
 
-    public Date getUpdateDate() 
+    public String getUpdateUserName() {
+        return updateUserName;
+    }
+
+    public void setUpdateUserName(String updateUserName) {
+        this.updateUserName = updateUserName;
+    }
+
+    public Date getUpdateDate()
     {
         return updateDate;
     }

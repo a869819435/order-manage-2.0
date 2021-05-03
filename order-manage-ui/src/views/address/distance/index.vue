@@ -7,23 +7,39 @@
       v-show="showSearch"
       label-width="80px"
     >
-      <el-form-item label="出发地" prop="codeXName">
-        <el-input
-          v-model="queryParams.codeXName"
-          placeholder="请输入出发地编号或者名称"
+      <el-form-item label="出发地" prop="codeX">
+        <el-select
+          filterable
+          v-model="queryParams.codeX"
+          placeholder="请选择出发地"
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        >
+          <el-option
+            v-for="item in addressOptions"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value"
+            >{{ item.value + "(" + item.name + ")" }}
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="目的地" prop="codeYName">
-        <el-input
-          v-model="queryParams.codeYName"
-          placeholder="请输入目的地编号或者名称"
+      <el-form-item label="目的地" prop="codeY">
+        <el-select
+          filterable
+          v-model="queryParams.codeY"
+          placeholder="请选择目的地"
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        >
+          <el-option
+            v-for="item in addressOptions"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value"
+            >{{ item.value + "(" + item.name + ")" }}
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="相差距离(km)" prop="distance" label-width="110px">
         <el-input
@@ -169,7 +185,12 @@
       <el-table-column label="出发地" align="center" prop="codeXName" />
       <el-table-column label="目的地" align="center" prop="codeYName" />
       <el-table-column label="相差距离(km)" align="center" prop="distance" />
-      <el-table-column label="状态" align="center" prop="status" />
+      <el-table-column
+        label="状态"
+        align="center"
+        prop="status"
+        :formatter="statusFormat"
+      />
       <el-table-column label="描述" align="center" prop="remark" />
       <!-- <el-table-column label="是否删除" align="center" prop="isDeleted" />
       <el-table-column label="创建人id" align="center" prop="createUser" />

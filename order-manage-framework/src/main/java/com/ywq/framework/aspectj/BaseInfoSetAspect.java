@@ -10,6 +10,7 @@ import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.BeansException;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -28,26 +29,34 @@ public class BaseInfoSetAspect {
     
     @Before(value = "insertInitInfoPointCut()")
     public void insertInitInfo(JoinPoint joinPoint){
-        LoginUser loginUser = SpringUtils.getBean(TokenService.class).getLoginUser(ServletUtils.getRequest());
-        Object[] args = joinPoint.getArgs();
-        if (args.length > 0){
-            Object temp = args[0];
-            ReflectUtils.invokeSetter(temp,"isDeleted",0);
-            ReflectUtils.invokeSetter(temp,"createUser",loginUser.getUser().getUserId());
-            ReflectUtils.invokeSetter(temp,"createDate",new Date());
-            ReflectUtils.invokeSetter(temp,"updateUser",loginUser.getUser().getUserId());
-            ReflectUtils.invokeSetter(temp,"updateDate",new Date());
+        try {
+            LoginUser loginUser = SpringUtils.getBean(TokenService.class).getLoginUser(ServletUtils.getRequest());
+            Object[] args = joinPoint.getArgs();
+            if (args.length > 0){
+                Object temp = args[0];
+                ReflectUtils.invokeSetter(temp,"isDeleted",0);
+                ReflectUtils.invokeSetter(temp,"createUser",loginUser.getUser().getUserId());
+                ReflectUtils.invokeSetter(temp,"createDate",new Date());
+                ReflectUtils.invokeSetter(temp,"updateUser",loginUser.getUser().getUserId());
+                ReflectUtils.invokeSetter(temp,"updateDate",new Date());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Before(value = "updateInitInfoPointCut()")
     public void updateInitInfo(JoinPoint joinPoint){
-        LoginUser loginUser = SpringUtils.getBean(TokenService.class).getLoginUser(ServletUtils.getRequest());
-        Object[] args = joinPoint.getArgs();
-        if (args.length > 0){
-            Object temp = args[0];
-            ReflectUtils.invokeSetter(temp,"updateUser",loginUser.getUser().getUserId());
-            ReflectUtils.invokeSetter(temp,"updateDate",new Date());
+        try {
+            LoginUser loginUser = SpringUtils.getBean(TokenService.class).getLoginUser(ServletUtils.getRequest());
+            Object[] args = joinPoint.getArgs();
+            if (args.length > 0){
+                Object temp = args[0];
+                ReflectUtils.invokeSetter(temp,"updateUser",loginUser.getUser().getUserId());
+                ReflectUtils.invokeSetter(temp,"updateDate",new Date());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

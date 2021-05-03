@@ -28,6 +28,14 @@ public interface IAddressInfoService
     public List<AddressInfo> selectAddressInfoList(AddressInfo addressInfo);
 
     /**
+     * 查询地址经纬度信息数量
+     *
+     * @param addressInfo
+     * @return
+     */
+    public int selectAddressInfoCount(AddressInfo addressInfo);
+
+    /**
      * 新增地址经纬度信息
      * 
      * @param addressInfo 地址经纬度信息

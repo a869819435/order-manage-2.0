@@ -21,11 +21,19 @@ public interface AddressInfoMapper
 
     /**
      * 查询地址经纬度信息列表
-     * 
+     *
      * @param addressInfo 地址经纬度信息
      * @return 地址经纬度信息集合
      */
     public List<AddressInfo> selectAddressInfoList(AddressInfo addressInfo);
+
+    /**
+     * 查询地址经纬度信息数量
+     *
+     * @param addressInfo 地址经纬度信息
+     * @return 地址经纬度信息集合
+     */
+    public int selectAddressInfoCount(AddressInfo addressInfo);
 
     /**
      * 新增地址经纬度信息
@@ -34,6 +42,14 @@ public interface AddressInfoMapper
      * @return 结果
      */
     public int insertAddressInfo(AddressInfo addressInfo);
+
+    /**
+     * 修改地址经纬度信息
+     *
+     * @param addressInfo 地址经纬度信息
+     * @return 结果
+     */
+    public int saveAddressCode(AddressInfo addressInfo);
 
     /**
      * 修改地址经纬度信息

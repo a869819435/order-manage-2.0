@@ -76,7 +76,8 @@ public class AddressInfoController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody AddressInfo addressInfo)
     {
-        return toAjax(addressInfoService.insertAddressInfo(addressInfo));
+        int rows = addressInfoService.insertAddressInfo(addressInfo);
+        return toAjax(rows,"该地址分类的名称已存在");
     }
 
     /**
@@ -87,7 +88,8 @@ public class AddressInfoController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody AddressInfo addressInfo)
     {
-        return toAjax(addressInfoService.updateAddressInfo(addressInfo));
+        int rows = addressInfoService.updateAddressInfo(addressInfo);
+        return toAjax(rows,"该地址分类的地址名称已存在");
     }
 
     /**
@@ -98,6 +100,7 @@ public class AddressInfoController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
-        return toAjax(addressInfoService.deleteAddressInfoByIds(ids));
+        int answer = addressInfoService.deleteAddressInfoByIds(ids);
+        return toAjax(answer,"该地址存在间距信息，请先删除地址间距信息后重试");
     }
 }

@@ -28,6 +28,14 @@ public interface AddressDistanceInfoMapper
     public List<AddressDistanceInfo> selectAddressDistanceInfoList(AddressDistanceInfo addressDistanceInfo);
 
     /**
+     * 查询地址间距信息数量
+     *
+     * @param addressDistanceInfo 地址间距信息
+     * @return 地址间距信息集合
+     */
+    public int selectAddressDistanceInfoCount(AddressDistanceInfo addressDistanceInfo);
+
+    /**
      * 新增地址间距信息
      * 
      * @param addressDistanceInfo 地址间距信息

@@ -25,9 +25,54 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectAddressInfoList" parameterType="AddressInfo" resultMap="AddressInfoResult">
+        SELECT
+            a.id,
+            a.CODE,
+            a.NAME,
+            a.longitude,
+            a.dimension,
+            a.class_id,
+            a.STATUS,
+            a.remark,
+            a.is_deleted,
+            a.create_user,
+            CONCAT('(',a.create_user,')',e.user_name) createUserName,
+            a.create_date,
+            a.update_user,
+            CONCAT('(',a.update_user,')',d.user_name) updateUserName,
+            a.update_date
+        FROM
+            address_info a
+            LEFT JOIN sys_user d ON a.update_user = d.user_id
+            LEFT JOIN sys_user e ON a.create_user = e.user_id
+        <where>
+            a.is_deleted = 0
+            <if test="code != null  and code != ''"> and a.code = #{code}</if>
+            <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
+            <if test="longitude != null "> and a.longitude = #{longitude}</if>
+            <if test="dimension != null "> and a.dimension = #{dimension}</if>
+            <if test="classId != null "> and a.class_id = #{classId}</if>
+            <if test="status != null "> and a.status = #{status}</if>
+            <if test="createUser != null "> and a.create_user like concat('%', #{createUser}, '%')</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and a.create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="updateUser != null "> and a.update_user like concat('%', #{updateUser}, '%')</if>
+            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and a.update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectAddressInfoById" parameterType="Long" resultMap="AddressInfoResult">
         <include refid="selectAddressInfoVo"/>
-        <where>  
-            <if test="code != null  and code != ''"> and code = #{code}</if>
+        where id = #{id}
+    </select>
+
+    <select id="selectAddressInfoCount" resultType="java.lang.Integer">
+        SELECT
+            COUNT(id)
+        FROM
+            address_info
+        <where>
+            is_deleted = 0
+            <if test="id != null  and id != ''"> and id != #{id}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="longitude != null "> and longitude = #{longitude}</if>
             <if test="dimension != null "> and dimension = #{dimension}</if>
@@ -38,18 +83,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateUser != null "> and update_user like concat('%', #{updateUser}, '%')</if>
             <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
         </where>
+        LIMIT 0,1
     </select>
-    
-    <select id="selectAddressInfoById" parameterType="Long" resultMap="AddressInfoResult">
-        <include refid="selectAddressInfoVo"/>
-        where id = #{id}
-    </select>
-        
+
     <insert id="insertAddressInfo" parameterType="AddressInfo">
         insert into address_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
-            <if test="code != null and code != ''">code,</if>
+            code,
             <if test="name != null and name != ''">name,</if>
             <if test="longitude != null">longitude,</if>
             <if test="dimension != null">dimension,</if>
@@ -64,7 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
-            <if test="code != null and code != ''">#{code},</if>
+            0,
             <if test="name != null and name != ''">#{name},</if>
             <if test="longitude != null">#{longitude},</if>
             <if test="dimension != null">#{dimension},</if>
@@ -79,10 +120,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
+    <update id="saveAddressCode">
+        UPDATE address_info SET code = id WHERE `name` = #{name} AND class_id = #{classId}
+    </update>
+
     <update id="updateAddressInfo" parameterType="AddressInfo">
         update address_info
         <trim prefix="SET" suffixOverrides=",">
-            <if test="code != null and code != ''">code = #{code},</if>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="longitude != null">longitude = #{longitude},</if>
             <if test="dimension != null">dimension = #{dimension},</if>
@@ -99,11 +143,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteAddressInfoById" parameterType="Long">
-        delete from address_info where id = #{id}
+        UPDATE address_info SET is_deleted = 1 where id = #{id}
     </delete>
 
     <delete id="deleteAddressInfoByIds" parameterType="String">
-        delete from address_info where id in 
+        UPDATE address_info SET is_deleted = 1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

@@ -85,6 +85,20 @@ public class BaseController
     }
 
     /**
+     * 响应返回结果
+     *
+     * @param rows 影响行数
+     * @return 操作结果
+     */
+    protected AjaxResult toAjax(int rows,String error)
+    {
+        if (rows < 0){
+            return AjaxResult.error(error);
+        }
+        return rows > 0 ? AjaxResult.success() : AjaxResult.error();
+    }
+
+    /**
      * 页面跳转
      */
     public String redirect(String url)
