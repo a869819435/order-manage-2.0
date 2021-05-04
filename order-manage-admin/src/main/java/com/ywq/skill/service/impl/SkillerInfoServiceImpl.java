@@ -1,11 +1,19 @@
 package com.ywq.skill.service.impl;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.ywq.system.domain.SysUserRole;
+import com.ywq.system.mapper.SysUserRoleMapper;
+import com.ywq.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ywq.skill.mapper.SkillerInfoMapper;
 import com.ywq.skill.domain.SkillerInfo;
 import com.ywq.skill.service.ISkillerInfoService;
+
+import javax.annotation.Resource;
 
 /**
  * 技师Service业务层处理
@@ -16,8 +24,11 @@ import com.ywq.skill.service.ISkillerInfoService;
 @Service
 public class SkillerInfoServiceImpl implements ISkillerInfoService 
 {
-    @Autowired
+    @Resource
     private SkillerInfoMapper skillerInfoMapper;
+
+    @Resource
+    private SysUserRoleMapper sysUserRoleMapper;
 
     /**
      * 查询技师
@@ -28,7 +39,14 @@ public class SkillerInfoServiceImpl implements ISkillerInfoService
     @Override
     public SkillerInfo selectSkillerInfoById(Long id)
     {
-        return skillerInfoMapper.selectSkillerInfoById(id);
+        SkillerInfo skillerInfo = skillerInfoMapper.selectSkillerInfoById(id);
+        if (skillerInfo.getEvaluation() == null){
+            skillerInfo.setEvaluation(BigDecimal.ZERO);
+        }
+        if (skillerInfo.getPower() == null){
+            skillerInfo.setPower(BigDecimal.ZERO);
+        }
+        return skillerInfo;
     }
 
     /**
@@ -52,6 +70,17 @@ public class SkillerInfoServiceImpl implements ISkillerInfoService
     @Override
     public int insertSkillerInfo(SkillerInfo skillerInfo)
     {
+        Long userId = skillerInfo.getUserId();
+        List<SysUserRole> userRoles = new ArrayList<>(1);
+        SysUserRole sysUserRole = new SysUserRole();
+        // 技师角色编号为2
+        sysUserRole.setRoleId(2L);
+        sysUserRole.setUserId(userId);
+        userRoles.add(sysUserRole);
+        int answer = sysUserRoleMapper.batchUserRole(userRoles);
+        if (answer <= 0){
+            return answer;
+        }
         return skillerInfoMapper.insertSkillerInfo(skillerInfo);
     }
 
@@ -76,6 +105,7 @@ public class SkillerInfoServiceImpl implements ISkillerInfoService
     @Override
     public int deleteSkillerInfoByIds(Long[] ids)
     {
+        sysUserRoleMapper.deleteUserRoleInfos(2L,ids);
         return skillerInfoMapper.deleteSkillerInfoByIds(ids);
     }
 
@@ -88,6 +118,7 @@ public class SkillerInfoServiceImpl implements ISkillerInfoService
     @Override
     public int deleteSkillerInfoById(Long id)
     {
+        sysUserRoleMapper.deleteUserRoleInfos(2L,new Long[]{id});
         return skillerInfoMapper.deleteSkillerInfoById(id);
     }
 }

@@ -1,5 +1,7 @@
 import request from '@/utils/request'
-import { praseStrEmpty } from "@/utils/ruoyi";
+import {
+  praseStrEmpty
+} from "@/utils/ruoyi";
 
 // 查询用户列表
 export function listUser(query) {
@@ -22,6 +24,15 @@ export function getUser(userId) {
 export function addUser(data) {
   return request({
     url: '/system/user',
+    method: 'post',
+    data: data
+  })
+}
+
+// 申请技师角色
+export function addSkillerRole(data) {
+  return request({
+    url: '/system/user/addSkillerRole',
     method: 'post',
     data: data
   })

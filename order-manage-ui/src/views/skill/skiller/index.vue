@@ -7,9 +7,9 @@
       v-show="showSearch"
       label-width="100px"
     >
-      <el-form-item label="技师ID" prop="userId" label-width="60px">
+      <el-form-item label="关联用户编号" prop="userInfo" label-width="100px">
         <el-input
-          v-model="queryParams.userId"
+          v-model="queryParams.userInfo"
           placeholder="请输入技师id"
           clearable
           size="small"
@@ -34,10 +34,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="地址id" prop="addressId" label-width="60px">
+      <el-form-item label="所在地址" prop="addressInfo" label-width="80px">
         <el-input
-          v-model="queryParams.addressId"
-          placeholder="请输入地址id"
+          v-model="queryParams.addressInfo"
+          placeholder="请输入所在地址"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -182,11 +182,11 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="id" />
-      <el-table-column label="技师ID" align="center" prop="userId" />
+      <el-table-column label="编号" align="center" prop="id" />
+      <el-table-column label="关联用户编号" align="center" prop="userInfo" />
       <el-table-column label="技师能力值" align="center" prop="power" />
       <el-table-column label="技师评价星级" align="center" prop="evaluation" />
-      <el-table-column label="地址id" align="center" prop="addressId" />
+      <el-table-column label="所在地址" align="center" prop="addressInfo" />
       <el-table-column
         label="状态"
         align="center"
@@ -195,7 +195,7 @@
       />
       <el-table-column label="描述" align="center" prop="remark" />
       <!-- <el-table-column label="是否删除" align="center" prop="isDeleted" /> -->
-      <el-table-column label="创建人id" align="center" prop="createUser" />
+      <el-table-column label="创建人" align="center" prop="createUserName" />
       <el-table-column
         label="创建时间"
         align="center"
@@ -206,7 +206,7 @@
           <span>{{ parseTime(scope.row.createDate, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="修改人id" align="center" prop="updateUser" />
+      <el-table-column label="修改人" align="center" prop="updateUserName" />
       <el-table-column
         label="修改时间"
         align="center"
@@ -254,20 +254,55 @@
     <!-- 添加或修改技师对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="620px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="技师ID" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入技师ID" />
+        <el-form-item label="关联用户编号" prop="userId">
+          <!-- <el-input v-model="form.userId" placeholder="请输入关联用户编号" /> -->
+          <el-select
+            filterable
+            v-model="form.userId"
+            placeholder="请选择关联用户编号"
+            clearable
+            style="width: 460px"
+          >
+            <el-option
+              v-for="item in userOptions"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"
+              >{{ item.value + "(" + item.name + ")" }}
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="技师能力值" prop="power">
-          <el-input v-model="form.power" placeholder="请输入技师能力值" />
+          <el-input
+            v-model="form.power"
+            placeholder="技师能力值在绑定技能后自动计算"
+            disabled="true"
+          />
         </el-form-item>
         <el-form-item label="技师评价星级" prop="evaluation">
           <el-input
             v-model="form.evaluation"
-            placeholder="请输入技师评价星级"
+            placeholder="技师评价星级根据工单评价自动计算"
+            disabled="true"
           />
         </el-form-item>
-        <el-form-item label="地址id" prop="addressId">
-          <el-input v-model="form.addressId" placeholder="请输入地址id" />
+        <el-form-item label="所在地址" prop="addressId">
+          <!-- <el-input v-model="form.addressId" placeholder="请输入地址id" /> -->
+          <el-select
+            filterable
+            v-model="form.addressId"
+            placeholder="请选择所在地址"
+            clearable
+            style="width: 460px"
+          >
+            <el-option
+              v-for="item in addressOptions"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"
+              >{{ item.value + "(" + item.name + ")" }}
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
@@ -325,6 +360,8 @@ import {
   updateSkiller,
   exportSkiller,
 } from "@/api/skill/skiller";
+import { listInfo } from "@/api/address/info";
+import { listUser } from "@/api/system/user";
 
 export default {
   name: "Skiller",
@@ -349,6 +386,10 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 用户列表
+      userOptions: [],
+      // 地址列表
+      addressOptions: [],
       // 状态字典
       statusOptions: [],
       // 创建时间时间范围
@@ -377,12 +418,12 @@ export default {
         userId: [
           { required: true, message: "技师ID不能为空", trigger: "blur" },
         ],
-        power: [
-          { required: true, message: "技师能力值不能为空", trigger: "blur" },
-        ],
-        evaluation: [
-          { required: true, message: "技师评价星级不能为空", trigger: "blur" },
-        ],
+        // power: [
+        //   { required: true, message: "技师能力值不能为空", trigger: "blur" },
+        // ],
+        // evaluation: [
+        //   { required: true, message: "技师评价星级不能为空", trigger: "blur" },
+        // ],
         addressId: [
           { required: true, message: "地址id不能为空", trigger: "blur" },
         ],
@@ -466,12 +507,16 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.getUserList();
+      this.getAddressInfo();
       this.open = true;
       this.title = "添加技师";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      this.getUserList();
+      this.getAddressInfo();
       const id = row.id || this.ids;
       getSkiller(id).then((response) => {
         this.form = response.data;
@@ -529,6 +574,31 @@ export default {
         .then((response) => {
           this.download(response.msg);
         });
+    },
+    // 获取用户列表
+    getUserList() {
+      // 只有角色编号为2 即普通用户才能成为技师
+      let queryParams = {};
+      queryParams.roleIds = [2];
+      listUser(queryParams).then((response) => {
+        this.userOptions = [];
+        let array = response.rows;
+        for (let index = 0; index < array.length; index++) {
+          const data = array[index];
+          this.userOptions.push({ value: data.userId, name: data.userName });
+        }
+      });
+    },
+    // 获取地址信息列表
+    getAddressInfo() {
+      listInfo().then((response) => {
+        this.addressOptions = [];
+        let array = response.rows;
+        for (let index = 0; index < array.length; index++) {
+          const data = array[index];
+          this.addressOptions.push({ value: data.id, name: data.name });
+        }
+      });
     },
   },
 };

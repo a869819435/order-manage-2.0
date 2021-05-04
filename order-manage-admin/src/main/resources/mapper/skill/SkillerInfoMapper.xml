@@ -24,18 +24,46 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectSkillerInfoList" parameterType="SkillerInfo" resultMap="SkillerInfoResult">
-        <include refid="selectSkillerInfoVo"/>
+        SELECT
+            a.id,
+            a.user_id,
+            CONCAT('(',a.user_id,')',b.user_name) userInfo,
+            a.power,
+            a.evaluation,
+            a.address_id,
+            CONCAT('(',a.address_id,')',c.`name`) addressInfo,
+            a.STATUS,
+            a.remark,
+            a.is_deleted,
+            a.create_user,
+            CONCAT('(',a.create_user,')',d.user_name) createUserName,
+            a.create_date,
+            a.update_user,
+            CONCAT('(',a.update_user,')',e.user_name) updateUserName,
+            a.update_date
+        FROM
+            skiller_info a
+            LEFT JOIN sys_user b ON a.user_id = b.user_id
+            LEFT JOIN address_info c ON a.address_id = c.id
+            LEFT JOIN sys_user d ON a.create_user = d.user_id
+            LEFT JOIN sys_user e ON a.update_user = e.user_id
         <where>  
-            <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="power != null "> and power = #{power}</if>
-            <if test="evaluation != null "> and evaluation = #{evaluation}</if>
-            <if test="addressId != null "> and address_id = #{addressId}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
-            <if test="createUser != null "> and create_user like concat('%', #{createUser}, '%')</if>
-            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
-            <if test="updateUser != null "> and update_user like concat('%', #{updateUser}, '%')</if>
-            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
+            <if test="userId != null "> and a.user_id = #{userId}</if>
+            <if test="userInfo != null and userInfo != ''">
+                and (b.user_name LIKE CONCAT('%',#{userInfo},'%') OR a.user_id LIKE CONCAT('%',#{userInfo},'%') )
+            </if>
+            <if test="power != null "> and a.power = #{power}</if>
+            <if test="evaluation != null "> and a.evaluation = #{evaluation}</if>
+            <if test="addressId != null "> and a.address_id = #{addressId}</if>
+            <if test="addressInfo != null and addressInfo != ''">
+                and (c.name LIKE CONCAT('%',#{addressInfo},'%') OR a.address_id LIKE CONCAT('%',#{addressInfo},'%') )
+            </if>
+            <if test="status != null "> and a.status = #{status}</if>
+            <if test="isDeleted != null "> and a.is_deleted = #{isDeleted}</if>
+            <if test="createUser != null "> and a.create_user like concat('%', #{createUser}, '%')</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and a.create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="updateUser != null "> and a.update_user like concat('%', #{updateUser}, '%')</if>
+            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and a.update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
         </where>
     </select>
     

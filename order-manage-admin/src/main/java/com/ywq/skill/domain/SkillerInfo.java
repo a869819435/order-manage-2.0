@@ -22,8 +22,11 @@ public class SkillerInfo extends BaseEntity
     private Long id;
 
     /** 关联的用户账号 */
-    @Excel(name = "关联的用户账号")
     private Long userId;
+
+    /** 关联的用户账号 */
+    @Excel(name = "关联的用户账号")
+    private String userInfo;
 
     /** 技师能力值 */
     @Excel(name = "技师能力值")
@@ -34,8 +37,11 @@ public class SkillerInfo extends BaseEntity
     private BigDecimal evaluation;
 
     /** 地址id */
-    @Excel(name = "地址id")
     private Long addressId;
+
+    /** 所在地址 */
+    @Excel(name = "所在地址")
+    private String addressInfo;
 
     /** 状态 */
     @Excel(name = "状态")
@@ -46,8 +52,11 @@ public class SkillerInfo extends BaseEntity
     private Integer isDeleted;
 
     /** 创建人id */
-    @Excel(name = "创建人id")
     private Long createUser;
+
+    /** 创建人 */
+    @Excel(name = "创建人")
+    private String createUserName;
 
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -55,112 +64,135 @@ public class SkillerInfo extends BaseEntity
     private Date createDate;
 
     /** 修改人id */
-    @Excel(name = "修改人id")
     private Long updateUser;
+
+    /** 修改人 */
+    @Excel(name = "修改人")
+    private String updateUserName;
 
     /** 修改时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date updateDate;
 
-    public void setId(Long id) 
-    {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getId() 
-    {
-        return id;
+    public Long getUserId() {
+        return userId;
     }
-    public void setUserId(Long userId) 
-    {
+
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    public Long getUserId() 
-    {
-        return userId;
+    public String getUserInfo() {
+        return userInfo;
     }
-    public void setPower(BigDecimal power) 
-    {
+
+    public void setUserInfo(String userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    public BigDecimal getPower() {
+        return power;
+    }
+
+    public void setPower(BigDecimal power) {
         this.power = power;
     }
 
-    public BigDecimal getPower() 
-    {
-        return power;
+    public BigDecimal getEvaluation() {
+        return evaluation;
     }
-    public void setEvaluation(BigDecimal evaluation) 
-    {
+
+    public void setEvaluation(BigDecimal evaluation) {
         this.evaluation = evaluation;
     }
 
-    public BigDecimal getEvaluation() 
-    {
-        return evaluation;
+    public Long getAddressId() {
+        return addressId;
     }
-    public void setAddressId(Long addressId) 
-    {
+
+    public void setAddressId(Long addressId) {
         this.addressId = addressId;
     }
 
-    public Long getAddressId() 
-    {
-        return addressId;
+    public String getAddressInfo() {
+        return addressInfo;
     }
-    public void setStatus(Integer status) 
-    {
+
+    public void setAddressInfo(String addressInfo) {
+        this.addressInfo = addressInfo;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public Integer getStatus() 
-    {
-        return status;
+    public Integer getIsDeleted() {
+        return isDeleted;
     }
-    public void setIsDeleted(Integer isDeleted) 
-    {
+
+    public void setIsDeleted(Integer isDeleted) {
         this.isDeleted = isDeleted;
     }
 
-    public Integer getIsDeleted() 
-    {
-        return isDeleted;
+    public Long getCreateUser() {
+        return createUser;
     }
-    public void setCreateUser(Long createUser) 
-    {
+
+    public void setCreateUser(Long createUser) {
         this.createUser = createUser;
     }
 
-    public Long getCreateUser() 
-    {
-        return createUser;
+    public String getCreateUserName() {
+        return createUserName;
     }
-    public void setCreateDate(Date createDate) 
-    {
+
+    public void setCreateUserName(String createUserName) {
+        this.createUserName = createUserName;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 
-    public Date getCreateDate() 
-    {
-        return createDate;
+    public Long getUpdateUser() {
+        return updateUser;
     }
-    public void setUpdateUser(Long updateUser) 
-    {
+
+    public void setUpdateUser(Long updateUser) {
         this.updateUser = updateUser;
     }
 
-    public Long getUpdateUser() 
-    {
-        return updateUser;
-    }
-    public void setUpdateDate(Date updateDate) 
-    {
-        this.updateDate = updateDate;
+    public String getUpdateUserName() {
+        return updateUserName;
     }
 
-    public Date getUpdateDate() 
-    {
+    public void setUpdateUserName(String updateUserName) {
+        this.updateUserName = updateUserName;
+    }
+
+    public Date getUpdateDate() {
         return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 
     @Override

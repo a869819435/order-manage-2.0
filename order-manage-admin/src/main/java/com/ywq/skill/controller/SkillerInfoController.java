@@ -1,6 +1,12 @@
 package com.ywq.skill.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
+
+import com.ywq.common.core.domain.model.LoginUser;
+import com.ywq.common.utils.ServletUtils;
+import com.ywq.common.utils.spring.SpringUtils;
+import com.ywq.framework.web.service.TokenService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,6 +82,23 @@ public class SkillerInfoController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody SkillerInfo skillerInfo)
     {
+        return toAjax(skillerInfoService.insertSkillerInfo(skillerInfo));
+    }
+
+    /**
+     * 申请技师角色
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:addSkillerRole')")
+    @Log(title = "申请技师角色", businessType = BusinessType.INSERT)
+    @PostMapping("/addSkillerRole")
+    public AjaxResult applySkiller(Long addressId,String remark){
+        LoginUser loginUser = SpringUtils.getBean(TokenService.class).getLoginUser(ServletUtils.getRequest());
+        SkillerInfo skillerInfo = new SkillerInfo();
+        skillerInfo.setAddressId(addressId);
+        skillerInfo.setRemark(remark);
+        skillerInfo.setUserId(loginUser.getUser().getUserId());
+        skillerInfo.setEvaluation(BigDecimal.ZERO);
+        skillerInfo.setPower(BigDecimal.ZERO);
         return toAjax(skillerInfoService.insertSkillerInfo(skillerInfo));
     }
 

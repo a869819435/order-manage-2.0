@@ -170,7 +170,7 @@
             plain
             icon="el-icon-plus"
             size="mini"
-            @click="handleAddSkillerRole"
+            @click="handleApplySkiller"
             v-hasPermi="['system:user:addSkillerRole']"
             >申请技师角色</el-button
           >
@@ -484,6 +484,46 @@
         <el-button @click="upload.open = false">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 申请技师角色对话框 -->
+    <el-dialog
+      :title="title"
+      :visible.sync="openApplySkiller"
+      width="620px"
+      append-to-body
+    >
+      <el-form
+        ref="applySkiller"
+        :model="applySkiller"
+        :rules="rules"
+        label-width="120px"
+      >
+        <el-form-item label="所在地址" prop="addressId">
+          <el-select
+            filterable
+            v-model="applySkiller.addressId"
+            placeholder="请选择所在地址"
+            clearable
+            style="width: 460px"
+          >
+            <el-option
+              v-for="item in addressOptions"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"
+              >{{ item.value + "(" + item.name + ")" }}
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="描述" prop="remark">
+          <el-input v-model="applySkiller.remark" placeholder="请输入描述" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitApplySkiller">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -493,6 +533,7 @@ import {
   getUser,
   delUser,
   addUser,
+  addSkillerRole,
   updateUser,
   exportUser,
   resetUserPwd,
@@ -500,6 +541,7 @@ import {
   importTemplate,
 } from "@/api/system/user";
 import { getToken } from "@/utils/auth";
+import { listInfo } from "@/api/address/info";
 import { treeselect } from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -529,6 +571,8 @@ export default {
       deptOptions: undefined,
       // 是否显示弹出层
       open: false,
+      // 是否显示申请角色对话弹出框
+      openApplySkiller: false,
       // 部门名称
       deptName: undefined,
       // 默认密码
@@ -537,6 +581,8 @@ export default {
       dateRange: [],
       // 状态数据字典
       statusOptions: [],
+      // 地址列表
+      addressOptions: [],
       // 性别状态字典
       sexOptions: [],
       // 岗位选项
@@ -545,6 +591,8 @@ export default {
       roleOptions: [],
       // 表单参数
       form: {},
+      // 申请技师角色表单
+      applySkiller: {},
       defaultProps: {
         children: "children",
         label: "label",
@@ -683,6 +731,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
+      this.openApplySkiller = false;
       this.reset();
     },
     // 表单重置
@@ -846,6 +895,36 @@ export default {
     // 性别字典翻译
     sexFormat(row, column) {
       return this.selectDictLabel(this.sexOptions, row.sex);
+    },
+    // 获取地址信息列表
+    getAddressInfo() {
+      listInfo().then((response) => {
+        this.addressOptions = [];
+        let array = response.rows;
+        for (let index = 0; index < array.length; index++) {
+          const data = array[index];
+          this.addressOptions.push({ value: data.id, name: data.name });
+        }
+      });
+    },
+    // 申请技师角色按钮操作
+    handleApplySkiller() {
+      this.reset();
+      this.getAddressInfo();
+      this.openApplySkiller = true;
+      this.title = "申请技师角色";
+    },
+    /** 申请技师角色对话框的提交按钮 */
+    submitApplySkiller: function () {
+      this.$refs["applySkiller"].validate((valid) => {
+        if (valid) {
+          addSkillerRole(this.applySkiller).then((response) => {
+            this.msgSuccess("申请技师角色成功");
+            this.openApplySkiller = false;
+            this.getList();
+          });
+        }
+      });
     },
   },
 };
