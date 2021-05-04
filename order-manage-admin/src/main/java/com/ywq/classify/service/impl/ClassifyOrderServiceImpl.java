@@ -1,11 +1,16 @@
 package com.ywq.classify.service.impl;
 
 import java.util.List;
+
+import com.ywq.common.utils.algorithm.TreeBuildUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ywq.classify.mapper.ClassifyOrderMapper;
 import com.ywq.classify.domain.ClassifyOrder;
 import com.ywq.classify.service.IClassifyOrderService;
+import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
 
 /**
  * 工单分类Service业务层处理
@@ -16,7 +21,7 @@ import com.ywq.classify.service.IClassifyOrderService;
 @Service
 public class ClassifyOrderServiceImpl implements IClassifyOrderService 
 {
-    @Autowired
+    @Resource
     private ClassifyOrderMapper classifyOrderMapper;
 
     /**
@@ -40,7 +45,12 @@ public class ClassifyOrderServiceImpl implements IClassifyOrderService
     @Override
     public List<ClassifyOrder> selectClassifyOrderList(ClassifyOrder classifyOrder)
     {
-        return classifyOrderMapper.selectClassifyOrderList(classifyOrder);
+        List<ClassifyOrder> list = classifyOrderMapper.selectClassifyOrderList(classifyOrder);
+        if (!CollectionUtils.isEmpty(list)){
+            list = TreeBuildUtils.buildTree(list);
+            list.forEach(order -> order.setParentName("(0)工单分类"));
+        }
+        return list;
     }
 
     /**
@@ -52,6 +62,11 @@ public class ClassifyOrderServiceImpl implements IClassifyOrderService
     @Override
     public int insertClassifyOrder(ClassifyOrder classifyOrder)
     {
+        if (classifyOrder.getParentId() == null){
+            classifyOrder.setParentId(0L);
+        }
+        ClassifyOrder parentInfo = classifyOrderMapper.selectClassifyOrderById(classifyOrder.getParentId());
+        classifyOrder.setLevel(parentInfo.getLevel() + 1);
         return classifyOrderMapper.insertClassifyOrder(classifyOrder);
     }
 

@@ -12,6 +12,9 @@ public class TreeEntity extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
+    /** 主键 */
+    private Long id;
+
     /** 父菜单名称 */
     private String parentName;
 
@@ -21,11 +24,22 @@ public class TreeEntity extends BaseEntity
     /** 显示顺序 */
     private Integer orderNum;
 
+    /** 层级 */
+    private Integer level;
+
     /** 祖级列表 */
     private String ancestors;
 
     /** 子部门 */
     private List<?> children = new ArrayList<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getParentName()
     {
@@ -55,6 +69,14 @@ public class TreeEntity extends BaseEntity
     public void setOrderNum(Integer orderNum)
     {
         this.orderNum = orderNum;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 
     public String getAncestors()

@@ -1,11 +1,16 @@
 package com.ywq.classify.service.impl;
 
 import java.util.List;
+
+import com.ywq.common.utils.algorithm.TreeBuildUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ywq.classify.mapper.ClassifySkiilMapper;
 import com.ywq.classify.domain.ClassifySkiil;
 import com.ywq.classify.service.IClassifySkiilService;
+import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
 
 /**
  * 技能分类Service业务层处理
@@ -16,7 +21,7 @@ import com.ywq.classify.service.IClassifySkiilService;
 @Service
 public class ClassifySkiilServiceImpl implements IClassifySkiilService 
 {
-    @Autowired
+    @Resource
     private ClassifySkiilMapper classifySkiilMapper;
 
     /**
@@ -40,7 +45,12 @@ public class ClassifySkiilServiceImpl implements IClassifySkiilService
     @Override
     public List<ClassifySkiil> selectClassifySkiilList(ClassifySkiil classifySkiil)
     {
-        return classifySkiilMapper.selectClassifySkiilList(classifySkiil);
+        List<ClassifySkiil> list = classifySkiilMapper.selectClassifySkiilList(classifySkiil);
+        if (!CollectionUtils.isEmpty(list)){
+            list = TreeBuildUtils.buildTree(list);
+            list.forEach(skill -> skill.setParentName("(0)技能分类"));
+        }
+        return list;
     }
 
     /**
@@ -52,6 +62,11 @@ public class ClassifySkiilServiceImpl implements IClassifySkiilService
     @Override
     public int insertClassifySkiil(ClassifySkiil classifySkiil)
     {
+        if (classifySkiil.getParentId() == null){
+            classifySkiil.setParentId(0L);
+        }
+        ClassifySkiil parentInfo = classifySkiilMapper.selectClassifySkiilById(classifySkiil.getParentId());
+        classifySkiil.setLevel(parentInfo.getLevel() + 1);
         return classifySkiilMapper.insertClassifySkiil(classifySkiil);
     }
 

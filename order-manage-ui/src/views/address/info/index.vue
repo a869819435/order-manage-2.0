@@ -193,7 +193,7 @@
       <el-table-column label="地址名称" align="center" prop="name" />
       <el-table-column label="经度" align="center" prop="longitude" />
       <el-table-column label="维度" align="center" prop="dimension" />
-      <el-table-column label="地址分类id" align="center" prop="classId" />
+      <el-table-column label="地址分类" align="center" prop="classId" />
       <el-table-column
         label="状态"
         align="center"
@@ -201,7 +201,7 @@
         :formatter="statusFormat"
       />
       <el-table-column label="描述" align="center" prop="remark" />
-      <el-table-column label="创建人id" align="center" prop="createUserName" />
+      <el-table-column label="创建人" align="center" prop="createUserName" />
       <el-table-column
         label="创建时间"
         align="center"
@@ -212,7 +212,7 @@
           <span>{{ parseTime(scope.row.createDate, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="修改人id" align="center" prop="updateUserName" />
+      <el-table-column label="修改人" align="center" prop="updateUserName" />
       <el-table-column
         label="修改时间"
         align="center"
@@ -274,10 +274,16 @@
         </el-form-item>
         <el-form-item label="地址分类" prop="classId">
           <!-- <el-input v-model="form.classId" placeholder="请输入地址分类id" /> -->
+          <!-- 
+            :disable-branch-nodes="true" 只能选择最后一级的元素 
+            :show-count="true" 显示子类下的个数
+          -->
           <treeselect
             v-model="form.classId"
             :options="addressOptions"
             :normalizer="normalizer"
+            :show-count="true"
+            :disable-branch-nodes="true"
             placeholder="请选择地址分类"
           />
         </el-form-item>
@@ -456,7 +462,7 @@ export default {
     getTreeselect() {
       listAddress().then((response) => {
         this.addressOptions = [];
-        const data = { id: 0, name: "顶级节点", children: [] };
+        const data = { id: 0, name: "顶级节点", children: [], level: 0 };
         data.children = this.handleTree(response.data, "id", "parentId");
         this.addressOptions.push(data);
       });

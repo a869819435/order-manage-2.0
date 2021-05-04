@@ -255,7 +255,7 @@
             v-model="form.codeX"
             placeholder="请选择出发地编号"
             clearable
-            width="500px"
+            style="width: 460px"
           >
             <el-option
               v-for="item in addressOptions"
@@ -273,7 +273,7 @@
             v-model="form.codeY"
             placeholder="请输入目的地编号"
             clearable
-            width="500px"
+            style="width: 460px"
           >
             <el-option
               v-for="item in addressOptions"

@@ -157,7 +157,7 @@
     >
       <el-table-column label="技能分类编码" align="left" prop="code" />
       <el-table-column label="技能分类名称" align="center" prop="name" />
-      <el-table-column label="父级分类" align="center" prop="parentId" />
+      <el-table-column label="父级分类" align="center" prop="parentName" />
       <el-table-column
         label="层级"
         align="center"
@@ -177,7 +177,7 @@
           <span>{{ parseTime(scope.row.createDate, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column> -->
-      <el-table-column label="修改人id" align="center" prop="updateUser" />
+      <el-table-column label="修改人" align="center" prop="updateUserName" />
       <el-table-column
         label="修改时间"
         align="center"
@@ -231,8 +231,8 @@
             placeholder="请选择父级分类"
           />
         </el-form-item>
-        <el-form-item label="层级" prop="level">
-          <!-- <el-input v-model="form.level" placeholder="请输入层级" /> -->
+        <!-- <el-form-item label="层级" prop="level">
+          <el-input v-model="form.level" placeholder="请输入层级" />
           <el-select
             v-model="form.level"
             placeholder="请输入层级"
@@ -247,7 +247,7 @@
               >{{ dict.dictLabel }}</el-option
             >
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
@@ -358,7 +358,7 @@ export default {
   },
   created() {
     this.getList();
-    this.getTreeselect();
+    this.getTreeselect(3);
     this.getDicts("class_level").then((response) => {
       this.levelOptions = response.data;
     });
@@ -401,8 +401,12 @@ export default {
       };
     },
     /** 查询技能分类下拉树结构 */
-    getTreeselect() {
-      listSkiil().then((response) => {
+    getTreeselect(level) {
+      let queryParams = {};
+      if (null != level && "" != level) {
+        queryParams.level = level;
+      }
+      listSkiil(queryParams).then((response) => {
         this.skiilOptions = [];
         const data = { id: 0, name: "顶级节点", children: [] };
         data.children = this.handleTree(response.data, "id", "parentId");
@@ -445,14 +449,14 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
-      this.getTreeselect();
+      this.getTreeselect(2);
       this.open = true;
       this.title = "添加技能分类";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      this.getTreeselect();
+      this.getTreeselect(2);
       if (row != null) {
         this.form.parentId = row.id;
       }

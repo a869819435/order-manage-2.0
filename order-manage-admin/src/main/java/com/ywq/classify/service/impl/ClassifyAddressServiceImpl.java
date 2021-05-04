@@ -1,11 +1,17 @@
 package com.ywq.classify.service.impl;
 
 import java.util.List;
+
+import com.ywq.common.core.domain.TreeEntity;
+import com.ywq.common.utils.algorithm.TreeBuildUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ywq.classify.mapper.ClassifyAddressMapper;
 import com.ywq.classify.domain.ClassifyAddress;
 import com.ywq.classify.service.IClassifyAddressService;
+import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
 
 /**
  * 地址分类Service业务层处理
@@ -16,7 +22,7 @@ import com.ywq.classify.service.IClassifyAddressService;
 @Service
 public class ClassifyAddressServiceImpl implements IClassifyAddressService 
 {
-    @Autowired
+    @Resource
     private ClassifyAddressMapper classifyAddressMapper;
 
     /**
@@ -40,7 +46,12 @@ public class ClassifyAddressServiceImpl implements IClassifyAddressService
     @Override
     public List<ClassifyAddress> selectClassifyAddressList(ClassifyAddress classifyAddress)
     {
-        return classifyAddressMapper.selectClassifyAddressList(classifyAddress);
+        List<ClassifyAddress> list = classifyAddressMapper.selectClassifyAddressList(classifyAddress);
+        if (!CollectionUtils.isEmpty(list)){
+            list = TreeBuildUtils.buildTree(list);
+            list.forEach(address -> address.setParentName("(0)地址分类"));
+        }
+        return list;
     }
 
     /**
@@ -52,6 +63,11 @@ public class ClassifyAddressServiceImpl implements IClassifyAddressService
     @Override
     public int insertClassifyAddress(ClassifyAddress classifyAddress)
     {
+        if (classifyAddress.getParentId() == null){
+            classifyAddress.setParentId(0L);
+        }
+        ClassifyAddress parentInfo = classifyAddressMapper.selectClassifyAddressById(classifyAddress.getParentId());
+        classifyAddress.setLevel(parentInfo.getLevel() + 1);
         return classifyAddressMapper.insertClassifyAddress(classifyAddress);
     }
 
