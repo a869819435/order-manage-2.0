@@ -28,6 +28,14 @@ public interface TeamInfoMapper
     public List<TeamInfo> selectTeamInfoList(TeamInfo teamInfo);
 
     /**
+     * 查询团队信息数量
+     *
+     * @param teamInfo 团队信息
+     * @return 团队信息集合
+     */
+    int selectTeamInfoCount(TeamInfo teamInfo);
+
+    /**
      * 新增团队信息
      * 
      * @param teamInfo 团队信息

@@ -58,8 +58,11 @@ public class TeamInfo extends BaseEntity
     private BigDecimal teamEvaluation;
 
     /** 团队地址 */
-    @Excel(name = "团队地址")
     private String teamAddress;
+
+    /** 团队地址 */
+    @Excel(name = "团队地址")
+    private String teamAddressInfo;
 
     /** 状态 */
     @Excel(name = "状态")
@@ -70,8 +73,11 @@ public class TeamInfo extends BaseEntity
     private Integer isDeleted;
 
     /** 创建人id */
-    @Excel(name = "创建人id")
     private Long createUser;
+
+    /** 创建人 */
+    @Excel(name = "创建人")
+    private String createUserName;
 
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -79,166 +85,175 @@ public class TeamInfo extends BaseEntity
     private Date createDate;
 
     /** 修改人id */
-    @Excel(name = "修改人id")
     private Long updateUser;
+
+    /** 修改人 */
+    @Excel(name = "修改人")
+    private String updateUserName;
 
     /** 修改时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date updateDate;
 
-    public void setId(Long id) 
-    {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getId() 
-    {
-        return id;
+    public String getCode() {
+        return code;
     }
-    public void setCode(String code) 
-    {
+
+    public void setCode(String code) {
         this.code = code;
     }
 
-    public String getCode() 
-    {
-        return code;
+    public String getName() {
+        return name;
     }
-    public void setName(String name) 
-    {
+
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getName() 
-    {
-        return name;
+    public String getPhone() {
+        return phone;
     }
-    public void setPhone(String phone) 
-    {
+
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
-    public String getPhone() 
-    {
-        return phone;
+    public String getMail() {
+        return mail;
     }
-    public void setMail(String mail) 
-    {
+
+    public void setMail(String mail) {
         this.mail = mail;
     }
 
-    public String getMail() 
-    {
-        return mail;
+    public Integer getNumber() {
+        return number;
     }
-    public void setNumber(Integer number) 
-    {
+
+    public void setNumber(Integer number) {
         this.number = number;
     }
 
-    public Integer getNumber() 
-    {
-        return number;
+    public BigDecimal getAvgPower() {
+        return avgPower;
     }
-    public void setAvgPower(BigDecimal avgPower) 
-    {
+
+    public void setAvgPower(BigDecimal avgPower) {
         this.avgPower = avgPower;
     }
 
-    public BigDecimal getAvgPower() 
-    {
-        return avgPower;
+    public BigDecimal getAvgIncome() {
+        return avgIncome;
     }
-    public void setAvgIncome(BigDecimal avgIncome) 
-    {
+
+    public void setAvgIncome(BigDecimal avgIncome) {
         this.avgIncome = avgIncome;
     }
 
-    public BigDecimal getAvgIncome() 
-    {
-        return avgIncome;
+    public BigDecimal getAllIncome() {
+        return allIncome;
     }
-    public void setAllIncome(BigDecimal allIncome) 
-    {
+
+    public void setAllIncome(BigDecimal allIncome) {
         this.allIncome = allIncome;
     }
 
-    public BigDecimal getAllIncome() 
-    {
-        return allIncome;
+    public BigDecimal getTeamEvaluation() {
+        return teamEvaluation;
     }
-    public void setTeamEvaluation(BigDecimal teamEvaluation) 
-    {
+
+    public void setTeamEvaluation(BigDecimal teamEvaluation) {
         this.teamEvaluation = teamEvaluation;
     }
 
-    public BigDecimal getTeamEvaluation() 
-    {
-        return teamEvaluation;
+    public String getTeamAddress() {
+        return teamAddress;
     }
-    public void setTeamAddress(String teamAddress) 
-    {
+
+    public void setTeamAddress(String teamAddress) {
         this.teamAddress = teamAddress;
     }
 
-    public String getTeamAddress() 
-    {
-        return teamAddress;
+    public String getTeamAddressInfo() {
+        return teamAddressInfo;
     }
-    public void setStatus(Integer status) 
-    {
+
+    public void setTeamAddressInfo(String teamAddressInfo) {
+        this.teamAddressInfo = teamAddressInfo;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public Integer getStatus() 
-    {
-        return status;
+    public Integer getIsDeleted() {
+        return isDeleted;
     }
-    public void setIsDeleted(Integer isDeleted) 
-    {
+
+    public void setIsDeleted(Integer isDeleted) {
         this.isDeleted = isDeleted;
     }
 
-    public Integer getIsDeleted() 
-    {
-        return isDeleted;
+    public Long getCreateUser() {
+        return createUser;
     }
-    public void setCreateUser(Long createUser) 
-    {
+
+    public void setCreateUser(Long createUser) {
         this.createUser = createUser;
     }
 
-    public Long getCreateUser() 
-    {
-        return createUser;
+    public String getCreateUserName() {
+        return createUserName;
     }
-    public void setCreateDate(Date createDate) 
-    {
+
+    public void setCreateUserName(String createUserName) {
+        this.createUserName = createUserName;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 
-    public Date getCreateDate() 
-    {
-        return createDate;
+    public Long getUpdateUser() {
+        return updateUser;
     }
-    public void setUpdateUser(Long updateUser) 
-    {
+
+    public void setUpdateUser(Long updateUser) {
         this.updateUser = updateUser;
     }
 
-    public Long getUpdateUser() 
-    {
-        return updateUser;
-    }
-    public void setUpdateDate(Date updateDate) 
-    {
-        this.updateDate = updateDate;
+    public String getUpdateUserName() {
+        return updateUserName;
     }
 
-    public Date getUpdateDate() 
-    {
+    public void setUpdateUserName(String updateUserName) {
+        this.updateUserName = updateUserName;
+    }
+
+    public Date getUpdateDate() {
         return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 
     @Override

@@ -30,24 +30,54 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectTeamInfoList" parameterType="TeamInfo" resultMap="TeamInfoResult">
-        <include refid="selectTeamInfoVo"/>
-        <where>  
-            <if test="code != null  and code != ''"> and code = #{code}</if>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
-            <if test="mail != null  and mail != ''"> and mail = #{mail}</if>
-            <if test="number != null "> and number = #{number}</if>
-            <if test="avgPower != null "> and avg_power = #{avgPower}</if>
-            <if test="avgIncome != null "> and avg_income = #{avgIncome}</if>
-            <if test="allIncome != null "> and all_income = #{allIncome}</if>
-            <if test="teamEvaluation != null "> and team_evaluation = #{teamEvaluation}</if>
-            <if test="teamAddress != null  and teamAddress != ''"> and team_address = #{teamAddress}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
-            <if test="createUser != null "> and create_user like concat('%', #{createUser}, '%')</if>
-            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
-            <if test="updateUser != null "> and update_user like concat('%', #{updateUser}, '%')</if>
-            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
+        SELECT
+            ti.id,
+            ti.CODE,
+            ti.NAME,
+            ti.phone,
+            ti.mail,
+            ti.number,
+            ti.avg_power,
+            ti.avg_income,
+            ti.all_income,
+            ti.team_evaluation,
+            ti.team_address,
+            CONCAT('(',ti.team_address,')',ai.name) teamAddressInfo,
+            ti.STATUS,
+            ti.remark,
+            ti.is_deleted,
+            ti.create_user,
+            CONCAT('(',ti.create_user,')',d.user_name) createUserName,
+            ti.create_date,
+            ti.update_user,
+            CONCAT('(',ti.update_user,')',e.user_name) updateUserName,
+            ti.update_date
+        FROM
+            team_info ti
+            LEFT JOIN address_info ai ON ti.team_address = ai.id
+            LEFT JOIN sys_user d ON ti.create_user = d.user_id
+            LEFT JOIN sys_user e ON ti.update_user = e.user_id
+        <where>
+            ti.is_deleted = 0
+            <if test="code != null  and code != ''"> and ti.code = #{code}</if>
+            <if test="name != null  and name != ''"> and ti.name like concat('%', #{name}, '%')</if>
+            <if test="phone != null  and phone != ''"> and ti.phone = #{phone}</if>
+            <if test="mail != null  and mail != ''"> and ti.mail = #{mail}</if>
+            <if test="number != null "> and ti.number = #{number}</if>
+            <if test="avgPower != null "> and ti.avg_power = #{avgPower}</if>
+            <if test="avgIncome != null "> and ti.avg_income = #{avgIncome}</if>
+            <if test="allIncome != null "> and ti.all_income = #{allIncome}</if>
+            <if test="teamEvaluation != null "> and ti.team_evaluation = #{teamEvaluation}</if>
+            <if test="teamAddress != null  and teamAddress != ''"> and ti.team_address = #{teamAddress}</if>
+            <if test="teamAddressInfo != null  and teamAddressInfo != ''">
+                and (ti.team_address LIKE CONCAT('%',#{teamAddressInfo},'%') OR ai.name LIKE CONCAT('%',#{teamAddressInfo},'%'))
+            </if>
+            <if test="status != null "> and ti.status = #{status}</if>
+            <if test="isDeleted != null "> and ti.is_deleted = #{isDeleted}</if>
+            <if test="createUser != null "> and ti.create_user like concat('%', #{createUser}, '%')</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and ti.create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="updateUser != null "> and ti.update_user like concat('%', #{updateUser}, '%')</if>
+            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and ti.update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
         </where>
     </select>
     
@@ -55,7 +85,38 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectTeamInfoVo"/>
         where id = #{id}
     </select>
-        
+
+    <select id="selectTeamInfoCount" resultType="java.lang.Integer">
+        SELECT
+            COUNT(ti.id)
+        FROM
+            team_info ti
+            LEFT JOIN address_info ai ON ti.team_address = ai.id
+        <where>
+            ti.is_deleted = 0
+            <if test="id != null "> and ti.id = #{id}</if>
+            <if test="code != null  and code != ''"> and ti.code = #{code}</if>
+            <if test="name != null  and name != ''"> and ti.name like concat('%', #{name}, '%')</if>
+            <if test="phone != null  and phone != ''"> and ti.phone = #{phone}</if>
+            <if test="mail != null  and mail != ''"> and ti.mail = #{mail}</if>
+            <if test="number != null "> and ti.number = #{number}</if>
+            <if test="avgPower != null "> and ti.avg_power = #{avgPower}</if>
+            <if test="avgIncome != null "> and ti.avg_income = #{avgIncome}</if>
+            <if test="allIncome != null "> and ti.all_income = #{allIncome}</if>
+            <if test="teamEvaluation != null "> and ti.team_evaluation = #{teamEvaluation}</if>
+            <if test="teamAddress != null  and teamAddress != ''"> and ti.team_address = #{teamAddress}</if>
+            <if test="teamAddressInfo != null  and teamAddressInfo != ''">
+                and (ti.team_address LIKE CONCAT('%',#{teamAddressInfo},'%') OR ai.name LIKE CONCAT('%',#{teamAddressInfo},'%'))
+            </if>
+            <if test="status != null "> and ti.status = #{status}</if>
+            <if test="isDeleted != null "> and ti.is_deleted = #{isDeleted}</if>
+            <if test="createUser != null "> and ti.create_user like concat('%', #{createUser}, '%')</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and ti.create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="updateUser != null "> and ti.update_user like concat('%', #{updateUser}, '%')</if>
+            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and ti.update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
+        </where>
+    </select>
+
     <insert id="insertTeamInfo" parameterType="TeamInfo">
         insert into team_info
         <trim prefix="(" suffix=")" suffixOverrides=",">

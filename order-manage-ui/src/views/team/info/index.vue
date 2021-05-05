@@ -1,6 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="100px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="100px"
+    >
       <el-form-item label="团队编码" prop="code">
         <el-input
           v-model="queryParams.code"
@@ -92,7 +98,12 @@
         />
       </el-form-item>
       <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
+        <el-select
+          v-model="queryParams.status"
+          placeholder="请选择状态"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in statusOptions"
             :key="dict.dictValue"
@@ -153,8 +164,16 @@
         ></el-date-picker>
       </el-form-item> -->
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -167,7 +186,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['team:info:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -178,7 +198,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['team:info:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -189,7 +210,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['team:info:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -199,14 +221,22 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['team:info:export']"
-        >导出</el-button>
+          >导出</el-button
+        >
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="infoList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="infoList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="id" />
+      <el-table-column label="编码" align="center" prop="id" />
       <el-table-column label="团队编码" align="center" prop="code" />
       <el-table-column label="团队名称" align="center" prop="name" />
       <el-table-column label="客服电话" align="center" prop="phone" />
@@ -216,23 +246,42 @@
       <el-table-column label="人均收益" align="center" prop="avgIncome" />
       <el-table-column label="总收益" align="center" prop="allIncome" />
       <el-table-column label="团队总评" align="center" prop="teamEvaluation" />
-      <el-table-column label="团队地址" align="center" prop="teamAddress" />
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
+      <el-table-column label="团队地址" align="center" prop="teamAddressInfo" />
+      <el-table-column
+        label="状态"
+        align="center"
+        prop="status"
+        :formatter="statusFormat"
+      />
       <el-table-column label="描述" align="center" prop="remark" />
       <!-- <el-table-column label="是否删除" align="center" prop="isDeleted" /> -->
-      <el-table-column label="创建人id" align="center" prop="createUser" />
-      <el-table-column label="创建时间" align="center" prop="createDate" width="180">
+      <el-table-column label="创建人" align="center" prop="createUserName" />
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createDate"
+        width="180"
+      >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createDate, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.createDate, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="修改人id" align="center" prop="updateUser" />
-      <el-table-column label="修改时间" align="center" prop="updateDate" width="180">
+      <el-table-column label="修改人" align="center" prop="updateUserName" />
+      <el-table-column
+        label="修改时间"
+        align="center"
+        prop="updateDate"
+        width="180"
+      >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateDate, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.updateDate, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -240,20 +289,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['team:info:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['team:info:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -276,22 +327,57 @@
           <el-input v-model="form.mail" placeholder="请输入团队客服联系邮箱" />
         </el-form-item>
         <el-form-item label="团队人数" prop="number">
-          <el-input v-model="form.number" placeholder="请输入团队人数" />
+          <el-input
+            v-model="form.number"
+            placeholder="自动计算团队人数"
+            disabled
+          />
         </el-form-item>
         <el-form-item label="团队平均水平" prop="avgPower">
-          <el-input v-model="form.avgPower" placeholder="请输入团队平均水平" />
+          <el-input
+            v-model="form.avgPower"
+            placeholder="自动计算团队平均水平"
+            disabled
+          />
         </el-form-item>
         <el-form-item label="团队人均收益" prop="avgIncome">
-          <el-input v-model="form.avgIncome" placeholder="请输入团队人均收益" />
+          <el-input
+            v-model="form.avgIncome"
+            placeholder="自动计算团队人均收益"
+            disabled
+          />
         </el-form-item>
         <el-form-item label="团队总收益" prop="allIncome">
-          <el-input v-model="form.allIncome" placeholder="请输入团队总收益" />
+          <el-input
+            v-model="form.allIncome"
+            placeholder="自动计算团队总收益"
+            disabled
+          />
         </el-form-item>
         <el-form-item label="团队总评" prop="teamEvaluation">
-          <el-input v-model="form.teamEvaluation" placeholder="请输入团队总评" />
+          <el-input
+            v-model="form.teamEvaluation"
+            placeholder="自动计算团队总评"
+            disabled
+          />
         </el-form-item>
         <el-form-item label="团队地址" prop="teamAddress">
-          <el-input v-model="form.teamAddress" placeholder="请输入团队地址" />
+          <!-- <el-input v-model="form.teamAddress" placeholder="请输入团队地址" /> -->
+          <el-select
+            filterable
+            v-model="form.teamAddress"
+            placeholder="请选择团队地址"
+            clearable
+            style="width: 460px"
+          >
+            <el-option
+              v-for="item in addressOptions"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"
+              >{{ item.value + "(" + item.name + ")" }}
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
@@ -299,7 +385,8 @@
               v-for="dict in statusOptions"
               :key="dict.dictValue"
               :label="parseInt(dict.dictValue)"
-            >{{dict.dictLabel}}</el-radio>
+              >{{ dict.dictLabel }}</el-radio
+            >
           </el-radio-group>
         </el-form-item>
         <el-form-item label="描述" prop="remark">
@@ -340,12 +427,19 @@
 </template>
 
 <script>
-import { listInfo, getInfo, delInfo, addInfo, updateInfo, exportInfo } from "@/api/team/info";
+import {
+  listInfo,
+  getInfo,
+  delInfo,
+  addInfo,
+  updateInfo,
+  exportInfo,
+} from "@/api/team/info";
+import { listInfo as addressListInfo } from "@/api/address/info";
 
 export default {
   name: "Info",
-  components: {
-  },
+  components: {},
   data() {
     return {
       // 遮罩层
@@ -362,6 +456,8 @@ export default {
       total: 0,
       // 团队信息表格数据
       infoList: [],
+      // 地址列表
+      addressOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -391,36 +487,41 @@ export default {
         createUser: null,
         createDate: null,
         updateUser: null,
-        updateDate: null
+        updateDate: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         code: [
-          { required: true, message: "团队编码不能为空", trigger: "blur" }
+          { required: true, message: "团队编码不能为空", trigger: "blur" },
         ],
         name: [
-          { required: true, message: "团队名称不能为空", trigger: "blur" }
+          { required: true, message: "团队名称不能为空", trigger: "blur" },
         ],
         phone: [
-          { required: true, message: "团队客服联系电话不能为空", trigger: "blur" }
+          {
+            required: true,
+            message: "团队客服联系电话不能为空",
+            trigger: "blur",
+          },
         ],
         mail: [
-          { required: true, message: "团队客服联系邮箱不能为空", trigger: "blur" }
-        ],
-        teamEvaluation: [
-          { required: true, message: "团队总评不能为空", trigger: "blur" }
+          {
+            required: true,
+            message: "团队客服联系邮箱不能为空",
+            trigger: "blur",
+          },
         ],
         teamAddress: [
-          { required: true, message: "团队地址不能为空", trigger: "blur" }
+          { required: true, message: "团队地址不能为空", trigger: "blur" },
         ],
-      }
+      },
     };
   },
   created() {
     this.getList();
-    this.getDicts("general_status").then(response => {
+    this.getDicts("general_status").then((response) => {
       this.statusOptions = response.data;
     });
   },
@@ -429,15 +530,19 @@ export default {
     getList() {
       this.loading = true;
       this.queryParams.params = {};
-      if (null != this.daterangeCreateDate && '' != this.daterangeCreateDate) {
-        this.queryParams.params["beginCreateDate"] = this.daterangeCreateDate[0];
+      if (null != this.daterangeCreateDate && "" != this.daterangeCreateDate) {
+        this.queryParams.params[
+          "beginCreateDate"
+        ] = this.daterangeCreateDate[0];
         this.queryParams.params["endCreateDate"] = this.daterangeCreateDate[1];
       }
-      if (null != this.daterangeUpdateDate && '' != this.daterangeUpdateDate) {
-        this.queryParams.params["beginUpdateDate"] = this.daterangeUpdateDate[0];
+      if (null != this.daterangeUpdateDate && "" != this.daterangeUpdateDate) {
+        this.queryParams.params[
+          "beginUpdateDate"
+        ] = this.daterangeUpdateDate[0];
         this.queryParams.params["endUpdateDate"] = this.daterangeUpdateDate[1];
       }
-      listInfo(this.queryParams).then(response => {
+      listInfo(this.queryParams).then((response) => {
         this.infoList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -472,7 +577,7 @@ export default {
         createUser: null,
         createDate: null,
         updateUser: null,
-        updateDate: null
+        updateDate: null,
       };
       this.resetForm("form");
     },
@@ -490,21 +595,23 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.getAddressInfo();
       this.open = true;
       this.title = "添加团队信息";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getInfo(id).then(response => {
+      this.getAddressInfo();
+      const id = row.id || this.ids;
+      getInfo(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改团队信息";
@@ -512,16 +619,16 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateInfo(this.form).then(response => {
+            updateInfo(this.form).then((response) => {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addInfo(this.form).then(response => {
+            addInfo(this.form).then((response) => {
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -533,30 +640,49 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除团队信息编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除团队信息编号为"' + ids + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+          type: "warning",
+        }
+      )
+        .then(function () {
           return delInfo(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        })
+        });
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有团队信息数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认导出所有团队信息数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
           return exportInfo(queryParams);
-        }).then(response => {
-          this.download(response.msg);
         })
-    }
-  }
+        .then((response) => {
+          this.download(response.msg);
+        });
+    },
+    // 获取地址信息列表
+    getAddressInfo() {
+      addressListInfo().then((response) => {
+        this.addressOptions = [];
+        let array = response.rows;
+        for (let index = 0; index < array.length; index++) {
+          const data = array[index];
+          this.addressOptions.push({ value: data.id, name: data.name });
+        }
+      });
+    },
+  },
 };
 </script>

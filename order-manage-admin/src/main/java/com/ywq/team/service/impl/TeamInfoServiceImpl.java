@@ -1,11 +1,13 @@
 package com.ywq.team.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ywq.team.mapper.TeamInfoMapper;
 import com.ywq.team.domain.TeamInfo;
 import com.ywq.team.service.ITeamInfoService;
+
+import javax.annotation.Resource;
 
 /**
  * 团队信息Service业务层处理
@@ -16,7 +18,7 @@ import com.ywq.team.service.ITeamInfoService;
 @Service
 public class TeamInfoServiceImpl implements ITeamInfoService 
 {
-    @Autowired
+    @Resource
     private TeamInfoMapper teamInfoMapper;
 
     /**
@@ -44,6 +46,18 @@ public class TeamInfoServiceImpl implements ITeamInfoService
     }
 
     /**
+     * 查询团队信息列表
+     *
+     * @param teamInfo 团队信息
+     * @return 团队信息
+     */
+    @Override
+    public int selectTeamInfoCount(TeamInfo teamInfo)
+    {
+        return teamInfoMapper.selectTeamInfoCount(teamInfo);
+    }
+
+    /**
      * 新增团队信息
      * 
      * @param teamInfo 团队信息
@@ -52,6 +66,18 @@ public class TeamInfoServiceImpl implements ITeamInfoService
     @Override
     public int insertTeamInfo(TeamInfo teamInfo)
     {
+        TeamInfo query = new TeamInfo();
+        query.setCode(teamInfo.getCode());
+        query.setTeamAddress(teamInfo.getTeamAddress());
+        int count = this.selectTeamInfoCount(query);
+        if (count > 0){
+            return -1;
+        }
+        teamInfo.setAllIncome(BigDecimal.ZERO);
+        teamInfo.setAvgIncome(BigDecimal.ZERO);
+        teamInfo.setAvgPower(BigDecimal.ZERO);
+        teamInfo.setTeamEvaluation(BigDecimal.ZERO);
+        teamInfo.setNumber(0);
         return teamInfoMapper.insertTeamInfo(teamInfo);
     }
 
@@ -64,6 +90,14 @@ public class TeamInfoServiceImpl implements ITeamInfoService
     @Override
     public int updateTeamInfo(TeamInfo teamInfo)
     {
+        TeamInfo query = new TeamInfo();
+        query.setId(teamInfo.getId());
+        query.setCode(teamInfo.getCode());
+        query.setTeamAddress(teamInfo.getTeamAddress());
+        int count = this.selectTeamInfoCount(query);
+        if (count > 0){
+            return -1;
+        }
         return teamInfoMapper.updateTeamInfo(teamInfo);
     }
 
