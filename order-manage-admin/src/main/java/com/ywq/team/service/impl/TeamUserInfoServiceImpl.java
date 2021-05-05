@@ -25,10 +25,7 @@ public class TeamUserInfoServiceImpl implements ITeamUserInfoService
     private TeamUserInfoMapper teamUserInfoMapper;
 
     @Resource
-    private TeamPostInfoMapper teamPostInfoMapper;
-
-    @Resource
-    private TeamInfoMapper teamInfoMapper;
+    private TeamInfoServiceImpl teamInfoService;
 
     /**
      * 查询团队成员信息
@@ -63,7 +60,11 @@ public class TeamUserInfoServiceImpl implements ITeamUserInfoService
     @Override
     public int insertTeamUserInfo(TeamUserInfo teamUserInfo)
     {
-        return teamUserInfoMapper.insertTeamUserInfo(teamUserInfo);
+        int answer = teamUserInfoMapper.insertTeamUserInfo(teamUserInfo);
+        if (answer > 0){
+            teamInfoService.calculateOfChange(teamUserInfo.getTeamId());
+        }
+        return answer;
     }
 
     /**
@@ -75,7 +76,11 @@ public class TeamUserInfoServiceImpl implements ITeamUserInfoService
     @Override
     public int updateTeamUserInfo(TeamUserInfo teamUserInfo)
     {
-        return teamUserInfoMapper.updateTeamUserInfo(teamUserInfo);
+        int answer = teamUserInfoMapper.updateTeamUserInfo(teamUserInfo);
+        if (answer > 0){
+            teamInfoService.calculateOfChange(teamUserInfo.getTeamId());
+        }
+        return answer;
     }
 
     /**

@@ -117,6 +117,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
+    <select id="calculateOfChange" parameterType="Long" resultMap="TeamInfoResult">
+        SELECT
+            COUNT(DISTINCT tui.id) number,
+            SUM(si.evaluation) team_evaluation,
+            SUM(tpi.salary) all_income,
+            SUM(si.power) avg_power
+        FROM
+            team_user_info tui
+            LEFT JOIN skiller_info si ON tui.skiller_id = si.id
+            LEFT JOIN team_post_info tpi ON tui.post_id = tpi.id
+        WHERE
+            tui.is_deleted = 0
+            AND tui.team_id = #{id}
+    </select>
+
     <insert id="insertTeamInfo" parameterType="TeamInfo">
         insert into team_info
         <trim prefix="(" suffix=")" suffixOverrides=",">

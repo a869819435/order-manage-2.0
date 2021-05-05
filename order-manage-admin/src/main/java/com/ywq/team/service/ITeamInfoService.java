@@ -36,6 +36,14 @@ public interface ITeamInfoService
     int selectTeamInfoCount(TeamInfo teamInfo);
 
     /**
+     * 由于改变重新计算全部值
+     *
+     * @param id
+     * @return
+     */
+    int calculateOfChange(Long id);
+
+    /**
      * 新增团队信息
      * 
      * @param teamInfo 团队信息

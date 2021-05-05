@@ -21,16 +21,26 @@ public class TeamUserInfo extends BaseEntity
     private Long id;
 
     /** 团队id */
-    @Excel(name = "团队id")
     private Long teamId;
 
+    /** 团队id */
+    @Excel(name = "团队信息")
+    private String teamInfo;
+
     /** 技师id */
-    @Excel(name = "技师id")
     private Long skillerId;
+
+    /** 技师信息 */
+    @Excel(name = "技师信息")
+    private String skillerInfo;
 
     /** 团队职务id */
     @Excel(name = "团队职务id")
     private Long postId;
+
+    /** 团队职务信息 */
+    @Excel(name = "团队职务信息")
+    private String postInfo;
 
     /** 状态 */
     @Excel(name = "状态")
@@ -41,8 +51,11 @@ public class TeamUserInfo extends BaseEntity
     private Integer isDeleted;
 
     /** 创建人id */
-    @Excel(name = "创建人id")
     private Long createUser;
+
+    /** 创建人 */
+    @Excel(name = "创建人")
+    private String createUserName;
 
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -50,103 +63,135 @@ public class TeamUserInfo extends BaseEntity
     private Date createDate;
 
     /** 修改人id */
-    @Excel(name = "修改人id")
     private Long updateUser;
+
+    /** 修改人 */
+    @Excel(name = "修改人")
+    private String updateUserName;
 
     /** 修改时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date updateDate;
 
-    public void setId(Long id) 
-    {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getId() 
-    {
-        return id;
+    public Long getTeamId() {
+        return teamId;
     }
-    public void setTeamId(Long teamId) 
-    {
+
+    public void setTeamId(Long teamId) {
         this.teamId = teamId;
     }
 
-    public Long getTeamId() 
-    {
-        return teamId;
+    public String getTeamInfo() {
+        return teamInfo;
     }
-    public void setSkillerId(Long skillerId) 
-    {
+
+    public void setTeamInfo(String teamInfo) {
+        this.teamInfo = teamInfo;
+    }
+
+    public Long getSkillerId() {
+        return skillerId;
+    }
+
+    public void setSkillerId(Long skillerId) {
         this.skillerId = skillerId;
     }
 
-    public Long getSkillerId() 
-    {
-        return skillerId;
+    public String getSkillerInfo() {
+        return skillerInfo;
     }
-    public void setPostId(Long postId) 
-    {
+
+    public void setSkillerInfo(String skillerInfo) {
+        this.skillerInfo = skillerInfo;
+    }
+
+    public Long getPostId() {
+        return postId;
+    }
+
+    public void setPostId(Long postId) {
         this.postId = postId;
     }
 
-    public Long getPostId() 
-    {
-        return postId;
+    public String getPostInfo() {
+        return postInfo;
     }
-    public void setStatus(Integer status) 
-    {
+
+    public void setPostInfo(String postInfo) {
+        this.postInfo = postInfo;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public Integer getStatus() 
-    {
-        return status;
+    public Integer getIsDeleted() {
+        return isDeleted;
     }
-    public void setIsDeleted(Integer isDeleted) 
-    {
+
+    public void setIsDeleted(Integer isDeleted) {
         this.isDeleted = isDeleted;
     }
 
-    public Integer getIsDeleted() 
-    {
-        return isDeleted;
+    public Long getCreateUser() {
+        return createUser;
     }
-    public void setCreateUser(Long createUser) 
-    {
+
+    public void setCreateUser(Long createUser) {
         this.createUser = createUser;
     }
 
-    public Long getCreateUser() 
-    {
-        return createUser;
+    public String getCreateUserName() {
+        return createUserName;
     }
-    public void setCreateDate(Date createDate) 
-    {
+
+    public void setCreateUserName(String createUserName) {
+        this.createUserName = createUserName;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 
-    public Date getCreateDate() 
-    {
-        return createDate;
+    public Long getUpdateUser() {
+        return updateUser;
     }
-    public void setUpdateUser(Long updateUser) 
-    {
+
+    public void setUpdateUser(Long updateUser) {
         this.updateUser = updateUser;
     }
 
-    public Long getUpdateUser() 
-    {
-        return updateUser;
-    }
-    public void setUpdateDate(Date updateDate) 
-    {
-        this.updateDate = updateDate;
+    public String getUpdateUserName() {
+        return updateUserName;
     }
 
-    public Date getUpdateDate() 
-    {
+    public void setUpdateUserName(String updateUserName) {
+        this.updateUserName = updateUserName;
+    }
+
+    public Date getUpdateDate() {
         return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 
     @Override

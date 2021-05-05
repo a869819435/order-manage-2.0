@@ -24,6 +24,9 @@ public class TeamPostInfoServiceImpl implements ITeamPostInfoService
     @Resource
     private TeamPostInfoMapper teamPostInfoMapper;
 
+    @Resource
+    private TeamInfoServiceImpl teamInfoService;
+
     /**
      * 查询团队职务信息
      * 
@@ -96,7 +99,11 @@ public class TeamPostInfoServiceImpl implements ITeamPostInfoService
         if (count > 0){
             return -1;
         }
-        return teamPostInfoMapper.updateTeamPostInfo(teamPostInfo);
+        int answer = teamPostInfoMapper.updateTeamPostInfo(teamPostInfo);
+        if (answer > 0){
+            teamInfoService.calculateOfChange(Long.valueOf(teamPostInfo.getCode()));
+        }
+        return answer;
     }
 
     /**

@@ -22,20 +22,74 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectTeamUserInfoList" parameterType="TeamUserInfo" resultMap="TeamUserInfoResult">
-        <include refid="selectTeamUserInfoVo"/>
-        <where>  
-            <if test="teamId != null "> and team_id = #{teamId}</if>
-            <if test="skillerId != null "> and skiller_id = #{skillerId}</if>
-            <if test="postId != null "> and post_id = #{postId}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
-            <if test="createUser != null "> and create_user like concat('%', #{createUser}, '%')</if>
-            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
-            <if test="updateUser != null "> and update_user like concat('%', #{updateUser}, '%')</if>
-            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
+        SELECT
+            tui.id,
+            tui.team_id,
+            CONCAT('(',tui.team_id,')',ti.name) teamInfo,
+            tui.skiller_id,
+            CONCAT('(',tui.skiller_id,')',su.user_name) skillerInfo,
+            tui.post_id,
+            CONCAT('(',tui.post_id,')',tpi.post) postInfo,
+            tui.STATUS,
+            tui.is_deleted,
+            tui.create_user,
+            CONCAT('(',tpi.create_user,')',d.user_name) createUserName,
+            tui.create_date,
+            tui.update_user,
+            CONCAT('(',tpi.update_user,')',e.user_name) updateUserName,
+            tui.update_date
+        FROM
+            team_user_info tui
+            LEFT JOIN team_info ti ON tui.team_id = ti.id
+            LEFT JOIN skiller_info si ON tui.skiller_id = si.id
+            LEFT JOIN sys_user su ON si.user_id = su.user_id
+            LEFT JOIN team_post_info tpi ON tui.post_id = tpi.id
+            LEFT JOIN sys_user d ON tui.create_user = d.user_id
+            LEFT JOIN sys_user e ON tui.update_user = e.user_id
+        <where>
+            tui.is_deleted = 0
+            <if test="id != null "> and tui.id = #{id}</if>
+            <if test="teamId != null "> and tui.team_id = #{teamId}</if>
+            <if test="teamInfo != null and teamInfo != '' ">
+                and (tui.team_id LIKE CONCAT('%',#{teamInfo},'%') OR ti.name LIKE CONCAT('%',#{teamInfo},'%') )
+            </if>
+            <if test="skillerId != null "> and tui.skiller_id = #{skillerId}</if>
+            <if test="skillerInfo != null and skillerInfo != '' ">
+                and (tui.skiller_id LIKE CONCAT('%',#{skillerInfo},'%') OR ti.user_name LIKE CONCAT('%',#{skillerInfo},'%') )
+            </if>
+            <if test="postId != null "> and tui.post_id = #{postId}</if>
+            <if test="postInfo != null and postInfo != '' ">
+                and (tui.post_id LIKE CONCAT('%',#{postInfo},'%') OR ti.post LIKE CONCAT('%',#{postInfo},'%') )
+            </if>
+            <if test="status != null "> and tui.status = #{status}</if>
+            <if test="isDeleted != null "> and tui.is_deleted = #{isDeleted}</if>
+            <if test="createUser != null "> and tui.create_user like concat('%', #{createUser}, '%')</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and tui.create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="updateUser != null "> and tui.update_user like concat('%', #{updateUser}, '%')</if>
+            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and tui.update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
         </where>
     </select>
-    
+
+    <select id="selectTeamUserInfoCount" parameterType="TeamUserInfo" resultMap="TeamUserInfoResult">
+        SELECT
+            COUNT(tui.id)
+        FROM
+            team_user_info tui
+        <where>
+            tui.is_deleted = 0
+            <if test="id != null "> and tui.id = #{id}</if>
+            <if test="teamId != null "> and tui.team_id = #{teamId}</if>
+            <if test="skillerId != null "> and tui.skiller_id = #{skillerId}</if>
+            <if test="postId != null "> and tui.post_id = #{postId}</if>
+            <if test="status != null "> and tui.status = #{status}</if>
+            <if test="isDeleted != null "> and tui.is_deleted = #{isDeleted}</if>
+            <if test="createUser != null "> and tui.create_user like concat('%', #{createUser}, '%')</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and tui.create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="updateUser != null "> and tui.update_user like concat('%', #{updateUser}, '%')</if>
+            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and tui.update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
+        </where>
+    </select>
+
     <select id="selectTeamUserInfoById" parameterType="Long" resultMap="TeamUserInfoResult">
         <include refid="selectTeamUserInfoVo"/>
         where id = #{id}
