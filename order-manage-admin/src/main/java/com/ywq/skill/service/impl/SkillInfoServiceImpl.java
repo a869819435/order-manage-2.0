@@ -1,11 +1,15 @@
 package com.ywq.skill.service.impl;
 
 import java.util.List;
+
+import com.ywq.address.domain.AddressInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ywq.skill.mapper.SkillInfoMapper;
 import com.ywq.skill.domain.SkillInfo;
 import com.ywq.skill.service.ISkillInfoService;
+
+import javax.annotation.Resource;
 
 /**
  * 技能Service业务层处理
@@ -16,7 +20,7 @@ import com.ywq.skill.service.ISkillInfoService;
 @Service
 public class SkillInfoServiceImpl implements ISkillInfoService 
 {
-    @Autowired
+    @Resource
     private SkillInfoMapper skillInfoMapper;
 
     /**
@@ -43,6 +47,11 @@ public class SkillInfoServiceImpl implements ISkillInfoService
         return skillInfoMapper.selectSkillInfoList(skillInfo);
     }
 
+    @Override
+    public int selectSkillInfoCount(SkillInfo skillInfo) {
+        return skillInfoMapper.selectSkillInfoCount(skillInfo);
+    }
+
     /**
      * 新增技能
      * 
@@ -52,6 +61,13 @@ public class SkillInfoServiceImpl implements ISkillInfoService
     @Override
     public int insertSkillInfo(SkillInfo skillInfo)
     {
+        SkillInfo query = new SkillInfo();
+        query.setName(skillInfo.getName());
+        query.setClassId(skillInfo.getClassId());
+        int addressInfos = this.selectSkillInfoCount(query);
+        if (addressInfos > 0){
+            return -1;
+        }
         return skillInfoMapper.insertSkillInfo(skillInfo);
     }
 

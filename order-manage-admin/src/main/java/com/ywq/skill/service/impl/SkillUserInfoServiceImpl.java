@@ -7,6 +7,8 @@ import com.ywq.skill.mapper.SkillUserInfoMapper;
 import com.ywq.skill.domain.SkillUserInfo;
 import com.ywq.skill.service.ISkillUserInfoService;
 
+import javax.annotation.Resource;
+
 /**
  * 技能-技师信息Service业务层处理
  * 
@@ -16,7 +18,7 @@ import com.ywq.skill.service.ISkillUserInfoService;
 @Service
 public class SkillUserInfoServiceImpl implements ISkillUserInfoService 
 {
-    @Autowired
+    @Resource
     private SkillUserInfoMapper skillUserInfoMapper;
 
     /**
@@ -41,6 +43,11 @@ public class SkillUserInfoServiceImpl implements ISkillUserInfoService
     public List<SkillUserInfo> selectSkillUserInfoList(SkillUserInfo skillUserInfo)
     {
         return skillUserInfoMapper.selectSkillUserInfoList(skillUserInfo);
+    }
+
+    @Override
+    public int selectSkillUserInfoCount(SkillUserInfo skillUserInfo) {
+        return skillUserInfoMapper.selectSkillUserInfoCount(skillUserInfo);
     }
 
     /**

@@ -1,6 +1,8 @@
 package com.ywq.skill.mapper;
 
 import java.util.List;
+
+import com.ywq.address.domain.AddressDistanceInfo;
 import com.ywq.skill.domain.SkillUserInfo;
 
 /**
@@ -26,6 +28,14 @@ public interface SkillUserInfoMapper
      * @return 技能-技师信息集合
      */
     public List<SkillUserInfo> selectSkillUserInfoList(SkillUserInfo skillUserInfo);
+
+    /**
+     * 查询地址间距信息数量
+     *
+     * @param skillUserInfo 技师信息
+     * @return 地址间距信息集合
+     */
+    public int selectSkillUserInfoCount(SkillUserInfo skillUserInfo);
 
     /**
      * 新增技能-技师信息

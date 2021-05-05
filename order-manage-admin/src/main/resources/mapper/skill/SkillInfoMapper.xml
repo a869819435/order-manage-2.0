@@ -23,8 +23,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectSkillInfoList" parameterType="SkillInfo" resultMap="SkillInfoResult">
-        <include refid="selectSkillInfoVo"/>
-        <where>  
+        SELECT
+            a.id,
+            a.CODE,
+            a.NAME,
+            a.class_id,
+            CONCAT('(',a.class_id,')',c.`name`) classInfo,
+            a.STATUS,
+            a.remark,
+            a.is_deleted,
+            a.create_user,
+            CONCAT('(',a.create_user,')',d.user_name) createUserName,
+            a.create_date,
+            a.update_user,
+            CONCAT('(',a.update_user,')',e.user_name) updateUserName,
+            a.update_date
+        FROM
+            skill_info a
+            LEFT JOIN classify_skiil c ON a.class_id = c.id
+            LEFT JOIN sys_user d ON a.create_user = d.user_id
+            LEFT JOIN sys_user e ON a.update_user = e.user_id
+        <where>
+            a.is_deleted = 0
             <if test="code != null  and code != ''"> and code = #{code}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="classId != null "> and class_id = #{classId}</if>
@@ -41,7 +61,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSkillInfoVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectSkillInfoCount" resultType="java.lang.Integer">
+        SELECT
+            COUNT(a.id)
+        FROM
+            skill_info a
+        <where>
+            a.is_deleted = 0
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="classId != null "> and class_id = #{classId}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+            <if test="createUser != null "> and create_user like concat('%', #{createUser}, '%')</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="updateUser != null "> and update_user like concat('%', #{updateUser}, '%')</if>
+            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
+        </where>
+    </select>
+
     <insert id="insertSkillInfo" parameterType="SkillInfo">
         insert into skill_info
         <trim prefix="(" suffix=")" suffixOverrides=",">

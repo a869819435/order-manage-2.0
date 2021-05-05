@@ -180,10 +180,10 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="id" />
+      <el-table-column label="编码" align="center" prop="id" />
       <el-table-column label="技能编码" align="center" prop="code" />
       <el-table-column label="技能名称" align="center" prop="name" />
-      <el-table-column label="技能分类" align="center" prop="classId" />
+      <el-table-column label="技能分类" align="center" prop="classInfo" />
       <el-table-column
         label="状态"
         align="center"
@@ -192,7 +192,7 @@
       />
       <el-table-column label="描述" align="center" prop="remark" />
       <!-- <el-table-column label="是否删除" align="center" prop="isDeleted" /> -->
-      <el-table-column label="创建人id" align="center" prop="createUser" />
+      <el-table-column label="创建人" align="center" prop="createUserName" />
       <el-table-column
         label="创建时间"
         align="center"
@@ -203,7 +203,7 @@
           <span>{{ parseTime(scope.row.createDate, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="修改人id" align="center" prop="updateUser" />
+      <el-table-column label="修改人" align="center" prop="updateUserName" />
       <el-table-column
         label="修改时间"
         align="center"
@@ -262,6 +262,8 @@
             v-model="form.classId"
             :options="skiilOptions"
             :normalizer="normalizer"
+            :show-count="true"
+            :disable-branch-nodes="true"
             placeholder="请选择技能分类"
           />
         </el-form-item>
@@ -391,7 +393,7 @@ export default {
   created() {
     this.getList();
     this.getTreeselect();
-    this.getDicts("order_status").then((response) => {
+    this.getDicts("general_status").then((response) => {
       this.statusOptions = response.data;
     });
   },

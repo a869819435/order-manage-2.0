@@ -29,8 +29,11 @@ public class SkillInfo extends BaseEntity
     private String name;
 
     /** 技能分类 */
-    @Excel(name = "技能分类")
     private Long classId;
+
+    /** 技能分类 */
+    @Excel(name = "技能分类")
+    private String classInfo;
 
     /** 状态 */
     @Excel(name = "状态")
@@ -49,104 +52,125 @@ public class SkillInfo extends BaseEntity
     @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date createDate;
 
+    /** 创建人 */
+    @Excel(name = "创建人")
+    private String createUserName;
+
     /** 修改人id */
     @Excel(name = "修改人id")
     private Long updateUser;
+
+    /** 修改人 */
+    @Excel(name = "修改人")
+    private String updateUserName;
 
     /** 修改时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date updateDate;
 
-    public void setId(Long id) 
-    {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getId() 
-    {
-        return id;
+    public String getCode() {
+        return code;
     }
-    public void setCode(String code) 
-    {
+
+    public void setCode(String code) {
         this.code = code;
     }
 
-    public String getCode() 
-    {
-        return code;
+    public String getName() {
+        return name;
     }
-    public void setName(String name) 
-    {
+
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getName() 
-    {
-        return name;
+    public Long getClassId() {
+        return classId;
     }
-    public void setClassId(Long classId) 
-    {
+
+    public void setClassId(Long classId) {
         this.classId = classId;
     }
 
-    public Long getClassId() 
-    {
-        return classId;
+    public String getClassInfo() {
+        return classInfo;
     }
-    public void setStatus(Integer status) 
-    {
+
+    public void setClassInfo(String classInfo) {
+        this.classInfo = classInfo;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public Integer getStatus() 
-    {
-        return status;
+    public Integer getIsDeleted() {
+        return isDeleted;
     }
-    public void setIsDeleted(Integer isDeleted) 
-    {
+
+    public void setIsDeleted(Integer isDeleted) {
         this.isDeleted = isDeleted;
     }
 
-    public Integer getIsDeleted() 
-    {
-        return isDeleted;
+    public Long getCreateUser() {
+        return createUser;
     }
-    public void setCreateUser(Long createUser) 
-    {
+
+    public void setCreateUser(Long createUser) {
         this.createUser = createUser;
     }
 
-    public Long getCreateUser() 
-    {
-        return createUser;
+    public Date getCreateDate() {
+        return createDate;
     }
-    public void setCreateDate(Date createDate) 
-    {
+
+    public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 
-    public Date getCreateDate() 
-    {
-        return createDate;
+    public String getCreateUserName() {
+        return createUserName;
     }
-    public void setUpdateUser(Long updateUser) 
-    {
+
+    public void setCreateUserName(String createUserName) {
+        this.createUserName = createUserName;
+    }
+
+    public Long getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(Long updateUser) {
         this.updateUser = updateUser;
     }
 
-    public Long getUpdateUser() 
-    {
-        return updateUser;
-    }
-    public void setUpdateDate(Date updateDate) 
-    {
-        this.updateDate = updateDate;
+    public String getUpdateUserName() {
+        return updateUserName;
     }
 
-    public Date getUpdateDate() 
-    {
+    public void setUpdateUserName(String updateUserName) {
+        this.updateUserName = updateUserName;
+    }
+
+    public Date getUpdateDate() {
         return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 
     @Override

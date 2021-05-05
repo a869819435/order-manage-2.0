@@ -28,6 +28,14 @@ public interface ISkillInfoService
     public List<SkillInfo> selectSkillInfoList(SkillInfo skillInfo);
 
     /**
+     * 查询技能数量
+     *
+     * @param skillInfo 技能
+     * @return 技能集合
+     */
+    int selectSkillInfoCount(SkillInfo skillInfo);
+
+    /**
      * 新增技能
      * 
      * @param skillInfo 技能

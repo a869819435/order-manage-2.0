@@ -10,7 +10,7 @@
       <el-form-item label="关联用户编号" prop="userInfo" label-width="100px">
         <el-input
           v-model="queryParams.userInfo"
-          placeholder="请输入技师id"
+          placeholder="请输入用户编号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -276,14 +276,14 @@
           <el-input
             v-model="form.power"
             placeholder="技师能力值在绑定技能后自动计算"
-            disabled="true"
+            disabled
           />
         </el-form-item>
         <el-form-item label="技师评价星级" prop="evaluation">
           <el-input
             v-model="form.evaluation"
             placeholder="技师评价星级根据工单评价自动计算"
-            disabled="true"
+            disabled
           />
         </el-form-item>
         <el-form-item label="所在地址" prop="addressId">

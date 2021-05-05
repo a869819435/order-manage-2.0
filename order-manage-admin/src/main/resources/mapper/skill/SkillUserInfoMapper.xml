@@ -24,18 +24,67 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectSkillUserInfoList" parameterType="SkillUserInfo" resultMap="SkillUserInfoResult">
-        <include refid="selectSkillUserInfoVo"/>
-        <where>  
-            <if test="skillId != null "> and skill_id = #{skillId}</if>
-            <if test="skillName != null  and skillName != ''"> and skill_name like concat('%', #{skillName}, '%')</if>
-            <if test="skillLevel != null "> and skill_level = #{skillLevel}</if>
-            <if test="skillerId != null "> and skiller_id = #{skillerId}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
-            <if test="createUser != null "> and create_user like concat('%', #{createUser}, '%')</if>
-            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
-            <if test="updateUser != null "> and update_user like concat('%', #{updateUser}, '%')</if>
-            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
+        SELECT
+            sui.id,
+            sui.skill_id,
+            sui.skill_name,
+            sui.skill_level,
+            sui.skiller_id,
+            CONCAT('(',sui.skiller_id,')',c.user_name) skillerInfo,
+            sui.STATUS,
+            sui.remark,
+            sui.is_deleted,
+            sui.create_user,
+            CONCAT('(',sui.create_user,')',d.user_name) createUserName,
+            sui.create_date,
+            sui.update_user,
+            CONCAT('(',sui.update_user,')',e.user_name) updateUserName,
+            sui.update_date
+        FROM
+            skill_user_info sui
+            LEFT JOIN skiller_info si ON sui.skiller_id = si.id
+            LEFT JOIN sys_user c ON si.user_id = c.user_id
+            LEFT JOIN sys_user d ON sui.create_user = d.user_id
+            LEFT JOIN sys_user e ON sui.update_user = e.user_id
+        <where>
+            sui.is_deleted = 0
+            <if test="skillId != null "> and sui.skill_id = #{skillId}</if>
+            <if test="skillName != null  and skillName != ''">
+                and (sui.skill_id LIKE CONCAT('%',#{skillName},'%') OR sui.skill_name LIKE CONCAT('%',#{skillName},'%'))
+            </if>
+            <if test="skillLevel != null "> and sui.skill_level = #{skillLevel}</if>
+            <if test="skillerId != null "> and sui.skiller_id = #{skillerId}</if>
+            <if test="skillerInfo != null and skillerInfo != '' ">
+                and (sui.skiller_id LIKE CONCAT('%',#{skillerInfo},'%') OR c.user_name LIKE CONCAT('%',#{skillerInfo},'%'))
+            </if>
+            <if test="status != null "> and sui.status = #{status}</if>
+            <if test="isDeleted != null "> and sui.is_deleted = #{isDeleted}</if>
+            <if test="createUser != null "> and sui.create_user like concat('%', #{createUser}, '%')</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and sui.create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="updateUser != null "> and sui.update_user like concat('%', #{updateUser}, '%')</if>
+            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and sui.update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
+        </where>
+    </select>
+
+    <select id="selectSkillUserInfoCount" resultType="java.lang.Integer">
+        SELECT
+            COUNT(sui.id)
+        FROM
+            skill_user_info sui
+            LEFT JOIN sys_user d ON sui.create_user = d.user_id
+            LEFT JOIN sys_user e ON sui.update_user = e.user_id
+        <where>
+            sui.is_deleted = 0
+            <if test="skillId != null "> and sui.skill_id = #{skillId}</if>
+            <if test="skillName != null  and skillName != ''"> and sui.skill_name like concat('%', #{skillName}, '%')</if>
+            <if test="skillLevel != null "> and sui.skill_level = #{skillLevel}</if>
+            <if test="skillerId != null "> and sui.skiller_id = #{skillerId}</if>
+            <if test="status != null "> and sui.status = #{status}</if>
+            <if test="isDeleted != null "> and sui.is_deleted = #{isDeleted}</if>
+            <if test="createUser != null "> and sui.create_user like concat('%', #{createUser}, '%')</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and sui.create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="updateUser != null "> and sui.update_user like concat('%', #{updateUser}, '%')</if>
+            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and sui.update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
         </where>
     </select>
     
@@ -43,7 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSkillUserInfoVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertSkillUserInfo" parameterType="SkillUserInfo">
         insert into skill_user_info
         <trim prefix="(" suffix=")" suffixOverrides=",">

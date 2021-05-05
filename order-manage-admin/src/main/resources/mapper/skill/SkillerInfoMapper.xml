@@ -47,7 +47,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             LEFT JOIN address_info c ON a.address_id = c.id
             LEFT JOIN sys_user d ON a.create_user = d.user_id
             LEFT JOIN sys_user e ON a.update_user = e.user_id
-        <where>  
+        <where>
+            a.is_deleted = 0
             <if test="userId != null "> and a.user_id = #{userId}</if>
             <if test="userInfo != null and userInfo != ''">
                 and (b.user_name LIKE CONCAT('%',#{userInfo},'%') OR a.user_id LIKE CONCAT('%',#{userInfo},'%') )

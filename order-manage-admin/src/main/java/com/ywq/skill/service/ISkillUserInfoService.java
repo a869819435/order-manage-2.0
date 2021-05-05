@@ -2,6 +2,7 @@ package com.ywq.skill.service;
 
 import java.util.List;
 import com.ywq.skill.domain.SkillUserInfo;
+import com.ywq.skill.domain.SkillerInfo;
 
 /**
  * 技能-技师信息Service接口
@@ -26,6 +27,14 @@ public interface ISkillUserInfoService
      * @return 技能-技师信息集合
      */
     public List<SkillUserInfo> selectSkillUserInfoList(SkillUserInfo skillUserInfo);
+
+    /**
+     * 查询技师数量
+     *
+     * @param skillUserInfo 技师技能表
+     * @return 技师集合
+     */
+    int selectSkillUserInfoCount(SkillUserInfo skillUserInfo);
 
     /**
      * 新增技能-技师信息
