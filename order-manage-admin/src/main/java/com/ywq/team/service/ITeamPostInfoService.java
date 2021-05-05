@@ -28,6 +28,14 @@ public interface ITeamPostInfoService
     public List<TeamPostInfo> selectTeamPostInfoList(TeamPostInfo teamPostInfo);
 
     /**
+     * 查询团队职务信息数量
+     *
+     * @param teamPostInfo 团队职务信息
+     * @return 团队职务信息集合
+     */
+    int selectTeamPostInfoCount(TeamPostInfo teamPostInfo);
+
+    /**
      * 新增团队职务信息
      * 
      * @param teamPostInfo 团队职务信息

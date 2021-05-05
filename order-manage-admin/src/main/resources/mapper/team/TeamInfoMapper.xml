@@ -94,7 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             LEFT JOIN address_info ai ON ti.team_address = ai.id
         <where>
             ti.is_deleted = 0
-            <if test="id != null "> and ti.id = #{id}</if>
+            <if test="id != null "> and ti.id != #{id}</if>
             <if test="code != null  and code != ''"> and ti.code = #{code}</if>
             <if test="name != null  and name != ''"> and ti.name like concat('%', #{name}, '%')</if>
             <if test="phone != null  and phone != ''"> and ti.phone = #{phone}</if>

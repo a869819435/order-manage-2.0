@@ -1,11 +1,16 @@
 package com.ywq.team.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import com.ywq.team.domain.TeamInfo;
+import com.ywq.team.mapper.TeamInfoMapper;
 import org.springframework.stereotype.Service;
 import com.ywq.team.mapper.TeamPostInfoMapper;
 import com.ywq.team.domain.TeamPostInfo;
 import com.ywq.team.service.ITeamPostInfoService;
+
+import javax.annotation.Resource;
 
 /**
  * 团队职务信息Service业务层处理
@@ -16,7 +21,7 @@ import com.ywq.team.service.ITeamPostInfoService;
 @Service
 public class TeamPostInfoServiceImpl implements ITeamPostInfoService 
 {
-    @Autowired
+    @Resource
     private TeamPostInfoMapper teamPostInfoMapper;
 
     /**
@@ -44,6 +49,18 @@ public class TeamPostInfoServiceImpl implements ITeamPostInfoService
     }
 
     /**
+     * 查询团队职务信息数量
+     *
+     * @param teamPostInfo 团队职务信息
+     * @return 团队职务信息
+     */
+    @Override
+    public int selectTeamPostInfoCount(TeamPostInfo teamPostInfo)
+    {
+        return teamPostInfoMapper.selectTeamPostInfoCount(teamPostInfo);
+    }
+
+    /**
      * 新增团队职务信息
      * 
      * @param teamPostInfo 团队职务信息
@@ -52,6 +69,13 @@ public class TeamPostInfoServiceImpl implements ITeamPostInfoService
     @Override
     public int insertTeamPostInfo(TeamPostInfo teamPostInfo)
     {
+        TeamPostInfo query = new TeamPostInfo();
+        query.setCode(teamPostInfo.getCode());
+        query.setPost(teamPostInfo.getPost());
+        int count = teamPostInfoMapper.selectTeamPostInfoCount(query);
+        if (count > 0){
+            return -1;
+        }
         return teamPostInfoMapper.insertTeamPostInfo(teamPostInfo);
     }
 
@@ -64,6 +88,14 @@ public class TeamPostInfoServiceImpl implements ITeamPostInfoService
     @Override
     public int updateTeamPostInfo(TeamPostInfo teamPostInfo)
     {
+        TeamPostInfo query = new TeamPostInfo();
+        query.setId(teamPostInfo.getId());
+        query.setCode(teamPostInfo.getCode());
+        query.setPost(teamPostInfo.getPost());
+        int count = teamPostInfoMapper.selectTeamPostInfoCount(query);
+        if (count > 0){
+            return -1;
+        }
         return teamPostInfoMapper.updateTeamPostInfo(teamPostInfo);
     }
 

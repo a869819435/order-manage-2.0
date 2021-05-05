@@ -24,18 +24,68 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectTeamPostInfoList" parameterType="TeamPostInfo" resultMap="TeamPostInfoResult">
-        <include refid="selectTeamPostInfoVo"/>
-        <where>  
-            <if test="code != null  and code != ''"> and code = #{code}</if>
-            <if test="post != null  and post != ''"> and post = #{post}</if>
-            <if test="postLevel != null "> and post_level = #{postLevel}</if>
-            <if test="salary != null "> and salary = #{salary}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
-            <if test="createUser != null "> and create_user like concat('%', #{createUser}, '%')</if>
-            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
-            <if test="updateUser != null "> and update_user like concat('%', #{updateUser}, '%')</if>
-            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
+        SELECT
+            tpi.id,
+            tpi.CODE,
+            CONCAT('(',tpi.code,')',ti.name) codeInfo,
+            tpi.post,
+            tpi.post_level,
+            tpi.salary,
+            tpi.remark,
+            tpi.STATUS,
+            tpi.is_deleted,
+            tpi.create_user,
+            CONCAT('(',tpi.create_user,')',d.user_name) createUserName,
+            tpi.create_date,
+            tpi.update_user,
+            CONCAT('(',tpi.update_user,')',e.user_name) updateUserName,
+            tpi.update_date
+        FROM
+            team_post_info tpi
+            LEFT JOIN team_info ti ON tpi.code = ti.id
+            LEFT JOIN sys_user d ON tpi.create_user = d.user_id
+            LEFT JOIN sys_user e ON tpi.update_user = e.user_id
+        <where>
+            <if test="id != null "> and tpi.id != #{id}</if>
+            <if test="code != null  and code != ''"> and tpi.code = #{code}</if>
+            <if test="codeInfo != null  and codeInfo != ''">
+                and (tpi.code LIKE CONCAT('%',#{codeInfo},'%') OR ti.name LIKE CONCAT('%',#{codeInfo},'%') )
+            </if>
+            <if test="post != null  and post != ''"> and tpi.post = #{post}</if>
+            <if test="postLevel != null "> and tpi.post_level = #{postLevel}</if>
+            <if test="salary != null "> and tpi.salary = #{salary}</if>
+            <if test="status != null "> and tpi.status = #{status}</if>
+            <if test="isDeleted != null "> and tpi.is_deleted = #{isDeleted}</if>
+            <if test="createUser != null "> and tpi.create_user like concat('%', #{createUser}, '%')</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and tpi.create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="updateUser != null "> and tpi.update_user like concat('%', #{updateUser}, '%')</if>
+            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and tpi.update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
+        </where>
+    </select>
+
+    <select id="selectTeamPostInfoCount" parameterType="TeamPostInfo" resultMap="TeamPostInfoResult">
+        SELECT
+            COUNT(tpi.id)
+        FROM
+            team_post_info tpi
+            LEFT JOIN team_info ti ON tpi.code = ti.id
+            LEFT JOIN sys_user d ON tpi.create_user = d.user_id
+            LEFT JOIN sys_user e ON tpi.update_user = e.user_id
+        <where>
+            <if test="id != null "> and tpi.id = #{id}</if>
+            <if test="code != null  and code != ''"> and tpi.code = #{code}</if>
+            <if test="codeInfo != null  and codeInfo != ''">
+                and (tpi.code LIKE CONCAT('%',#{codeInfo},'%') OR ti.name LIKE CONCAT('%',#{codeInfo},'%') )
+            </if>
+            <if test="post != null  and post != ''"> and tpi.post = #{post}</if>
+            <if test="postLevel != null "> and tpi.post_level = #{postLevel}</if>
+            <if test="salary != null "> and tpi.salary = #{salary}</if>
+            <if test="status != null "> and tpi.status = #{status}</if>
+            <if test="isDeleted != null "> and tpi.is_deleted = #{isDeleted}</if>
+            <if test="createUser != null "> and tpi.create_user like concat('%', #{createUser}, '%')</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and tpi.create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="updateUser != null "> and tpi.update_user like concat('%', #{updateUser}, '%')</if>
+            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and tpi.update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
         </where>
     </select>
     

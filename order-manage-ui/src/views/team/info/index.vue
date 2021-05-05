@@ -88,10 +88,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item> -->
-      <el-form-item label="团队地址" prop="teamAddress">
+      <el-form-item label="团队地址" prop="teamAddressInfo">
         <el-input
-          v-model="queryParams.teamAddress"
-          placeholder="请输入团队地址"
+          v-model="queryParams.teamAddressInfo"
+          placeholder="请输入地址编号或者信息"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"

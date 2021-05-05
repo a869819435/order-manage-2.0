@@ -75,7 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             LEFT JOIN sys_user e ON sui.update_user = e.user_id
         <where>
             sui.is_deleted = 0
-            <if test="id != null "> and sui.id = #{id}</if>
+            <if test="id != null "> and sui.id != #{id}</if>
             <if test="skillId != null "> and sui.skill_id = #{skillId}</if>
             <if test="skillName != null  and skillName != ''"> and sui.skill_name like concat('%', #{skillName}, '%')</if>
             <if test="skillLevel != null "> and sui.skill_level = #{skillLevel}</if>

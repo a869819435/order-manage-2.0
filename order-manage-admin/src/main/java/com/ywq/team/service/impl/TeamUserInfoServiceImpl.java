@@ -1,11 +1,16 @@
 package com.ywq.team.service.impl;
 
 import java.util.List;
+
+import com.ywq.team.mapper.TeamInfoMapper;
+import com.ywq.team.mapper.TeamPostInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ywq.team.mapper.TeamUserInfoMapper;
 import com.ywq.team.domain.TeamUserInfo;
 import com.ywq.team.service.ITeamUserInfoService;
+
+import javax.annotation.Resource;
 
 /**
  * 团队成员信息Service业务层处理
@@ -16,8 +21,14 @@ import com.ywq.team.service.ITeamUserInfoService;
 @Service
 public class TeamUserInfoServiceImpl implements ITeamUserInfoService 
 {
-    @Autowired
+    @Resource
     private TeamUserInfoMapper teamUserInfoMapper;
+
+    @Resource
+    private TeamPostInfoMapper teamPostInfoMapper;
+
+    @Resource
+    private TeamInfoMapper teamInfoMapper;
 
     /**
      * 查询团队成员信息
